@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList } from "react-icons/fa";
+import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList, FaPalette } from "react-icons/fa";
 
 interface SidebarItem {
   label: string;
@@ -10,7 +10,7 @@ interface SidebarItem {
 
 const mainItems: SidebarItem[] = [
   { label: "Inicio", route: "/", icon: <FaHome /> },
- 
+  
 ];
 
 
@@ -19,6 +19,7 @@ const exerciseItems: SidebarItem[] = [
   { label: "Tablas de Multiplicar", route: "/tablasmul", icon: <FaCalculator /> },
   { label: "Conversor de Unidades", route: "/conversorunid", icon: <FaRuler /> },
   { label: "Validadador de Contraseñas", route: "/validcontrasena", icon: <FaKey /> },
+  { label: "Cambiar color 3D", route: "/color3d", icon: <FaPalette /> },
  
 ];
 
