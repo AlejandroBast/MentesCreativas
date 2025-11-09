@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList, FaPalette, FaRobot } from "react-icons/fa";
+import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList, FaPalette, FaRobot, FaTint } from "react-icons/fa";
 
 interface SidebarItem {
   label: string;
@@ -19,8 +19,9 @@ const exerciseItems: SidebarItem[] = [
   { label: "Tablas de Multiplicar", route: "/tablasmul", icon: <FaCalculator /> },
   { label: "Conversor de Unidades", route: "/conversorunid", icon: <FaRuler /> },
   { label: "Validadador de Contraseñas", route: "/validcontrasena", icon: <FaKey /> },
-  { label: "Cambiar color 3D", route: "/color3d", icon: <FaPalette /> },
-  { label: "Robot 3D", route: "/robot3d", icon: <FaRobot /> },
+  { label: "Cambiar color 3D - Matemáticas", route: "/color3d", icon: <FaPalette /> },
+  { label: "Robot 3D - Tecnología", route: "/robot3d", icon: <FaRobot /> },
+  { label: "Ciclo del Agua - Ciencias", route: "/watercycle", icon: <FaTint /> },
 ];
 
 export default function Sidebar() {
@@ -32,12 +33,15 @@ export default function Sidebar() {
       key={route}
       to={route}
       className={({ isActive }) =>
-        `w-full text-left flex items-center gap-2 justify-between rounded-lg px-3 py-2 text-slate-700 dark:text-slate-300 
-         hover:bg-slate-50 dark:hover:bg-slate-800 
+        `w-full text-left rounded-lg px-3 py-2 text-slate-700 dark:text-slate-300
+         hover:bg-slate-50 dark:hover:bg-slate-800 min-h-[40px]
          ${isActive ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300" : ""}`
       }
     >
-      <div className="flex items-center gap-2">{icon} {label}</div>
+      <div className="flex items-center gap-2 whitespace-normal">
+        <span className="flex-none">{icon}</span>
+        <span className="flex-1 text-sm break-words">{label}</span>
+      </div>
     </NavLink>
   );
 
