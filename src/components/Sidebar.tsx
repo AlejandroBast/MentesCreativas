@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList, FaPalette } from "react-icons/fa";
+import { FaHome, FaColumns, FaMicrophone, FaShapes, FaCalculator, FaRuler, FaKey, FaMouse, FaList, FaPalette, FaRobot } from "react-icons/fa";
 
 interface SidebarItem {
   label: string;
@@ -20,7 +20,7 @@ const exerciseItems: SidebarItem[] = [
   { label: "Conversor de Unidades", route: "/conversorunid", icon: <FaRuler /> },
   { label: "Validadador de Contraseñas", route: "/validcontrasena", icon: <FaKey /> },
   { label: "Cambiar color 3D", route: "/color3d", icon: <FaPalette /> },
- 
+  { label: "Robot 3D", route: "/robot3d", icon: <FaRobot /> },
 ];
 
 export default function Sidebar() {
