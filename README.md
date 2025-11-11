@@ -173,10 +173,7 @@ El modelo 3D está compuesto por distintas partes (cabeza, brazos, piernas, cuer
 
 La funcionalidad principal se centra en que el usuario pueda:
 - **Observar y manipular el robot** en un entorno tridimensional.  
-- **Controlar la cámara** con rotación, zoom y paneo, manteniendo siempre una vista clara de la escena.  
-- **Seleccionar partes del robot** con el puntero: al pasar el cursor, cada pieza se resalta visualmente para indicar que está activa.  
-- **Ejecutar movimientos animados**, como saludar, levantar los brazos o girar la cabeza, mediante acciones controladas desde la interfaz.  
-- **Ajustar la velocidad de animación** en tiempo real, para observar los efectos a diferentes ritmos.  
+- **Controlar la cámara** con rotación, zoom y paneo, manteniendo siempre una vista clara de la escena.   
 - **Cambiar de perspectiva** (frontal, lateral, superior o isométrica) según el modo de observación deseado.  
 - **Restablecer la vista y la pose** del robot con un solo clic, garantizando siempre un estado inicial limpio.
 
