@@ -88,6 +88,18 @@ export default [
     },
   },
 
+  // Overrides para scripts Node (ESM) en carpeta scripts/
+  {
+    files: ["scripts/**/*.js"],
+    languageOptions: {
+      sourceType: "module",
+      globals: {
+        process: "readonly",
+        console: "readonly",
+      },
+    },
+  },
+
   // Overrides para configs ESM
   {
     files: ["eslint.config.js", "jest.config.js"],

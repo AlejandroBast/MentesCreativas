@@ -3,7 +3,7 @@
  * Parse JMeter JTL (CSV) and output a compact Markdown performance summary.
  * Usage: node scripts/parse-jmeter.js perf/jmeter-results.jtl
  */
-const { readFileSync } = require('fs');
+import { readFileSync } from 'node:fs';
 
 function percentile(arr, p) {
   if (!arr.length) return 0;
