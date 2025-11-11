@@ -103,17 +103,16 @@ sub atributos seleccionados:
 
 ### 3.2 Componentes clave
 - SceneCanvas: contenedor reusable para escenas 3D con *OrbitControls*, luz y tamaño fijo.
-- MediaPlayer: reproductor de video con subtítulos *.vtt* y detección de completado.
+
 - Quiz: opción múltiple con feedback inmediato.
-- Progress: persistencia simple en localStorage para marcar video/3D/quiz completados.
+
 - Controles accesibles: select, checkbox, range con *labels* y *foco visible*.
 
 ### 3.3 Flujos de usuario (resumen)
 1. *Seleccionar tema* desde el Sidebar → se abre la vista.  
 2. *Interactuar* (3D, sliders, toggles, bloques) con mouse *y* teclado.  
 3. *Feedback inmediato* (<200 ms) y estilos consistentes (tokens de color/tipo/espaciado).  
-4. (Opcional) *Video corto* con subtítulos.  
-5. *Progreso* se guarda localmente.
+4. *Progreso* se guarda localmente.
 
 ### 3.4 Alineación a ISO/IEC 25010 (Usabilidad)
 - *Estética UI:* tokens de diseño aplicados, contraste texto normal *≥4.5:1* / grande *≥3:1*, estados hover/focus/active coherentes.
@@ -122,8 +121,8 @@ sub atributos seleccionados:
 ### 3.5 Criterios de aceptación (frontend)
 - *Exploración 3D:* cambiar *forma/color/escala*; ayuda “Rota/Zoom; Tab para controles”.  
 - *Descomposición:* toggles accesibles; *conteos correctos* (6/12/8); estilos diferenciados.  
-- *Simetría:* selector mariposa/estrella + ejes; foco visible en controles.  
-- *Fracciones 3D:* sliders con límites (*2–12* y *0–den); muestra **fracción, decimal y %; actualización **<200 ms*.  
+  
+ 
 - *Naturales (Ciclo del agua):* slider de temperatura activa fases; hotspots con texto breve.  
 - *Tecnología (Algoritmos):* edición/ejecución de bloques; botón *Reiniciar*.  
 - *Accesibilidad y teclado:* 100% de controles navegables; labels correctos.  
