@@ -98,7 +98,7 @@ export default function WaterCycle() {
 
             <div className="mt-2 grid grid-cols-2 gap-2">
               {steps.map((s, i) => (
-                <button key={s.id} onClick={() => { setPlaying(false); setIdx(i); }} className={`text-xs px-2 py-1 rounded ${i === idx ? 'bg-emerald-500 text-white' : 'border'}`}>{s.title}</button>
+                <button key={s.id} onClick={() => { setPlaying(false); setIdx(i); }} className={`text-xs px-2 py-1 rounded ${i === idx ? 'bg-blue-600 text-white' : 'border'}`}>{s.title}</button>
               ))}
             </div>
           </div>

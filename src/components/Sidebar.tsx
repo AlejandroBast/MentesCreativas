@@ -31,9 +31,9 @@ export default function Sidebar() {
       key={route}
       to={route}
       className={({ isActive }) =>
-        `w-full text-left rounded-lg px-3 py-2 text-slate-500 dark:text-slate-900
-         hover:bg-slate-50 dark:hover:bg-slate-900 min-h-[40px]
-         ${isActive ? "bg-emerald-50 dark:bg-emerald-500/30 text-emerald-700 dark:text-emerald-300" : ""}`
+        `block w-full text-left rounded-lg pl-4 pr-3 py-2 text-slate-700 dark:text-slate-200
+         hover:bg-sky-100 dark:hover:bg-slate-800 min-h-[40px] transition-colors
+         ${isActive ? "bg-sky-200/70 text-slate-900 dark:bg-slate-800 dark:text-white" : ""}`
       }
     >
       <div className="flex items-center gap-2 whitespace-normal">
@@ -44,7 +44,7 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="hidden md:block w-full md:w-[240px] border-r border-slate-900 dark:border-slate-900 bg-slate-600 dark:bg-teal-600/90 backdrop-blur-sm">
+    <aside className="hidden md:block w-full md:w-[240px] border-r border-sky-200 dark:border-slate-800 bg-sky-100/90 dark:bg-slate-900/60 backdrop-blur-sm">
       <div className="p-3 space-y-1">
 
         {/* Acordeón Main Items */}
@@ -57,19 +57,19 @@ export default function Sidebar() {
           <span className="text-sm font-semibold tracking-wide">Menú Principal</span>
           <span className="text-xs opacity-70">{openMain ? "▲" : "▼"}</span>
         </button>
-        {openMain && <div className="pl-4 space-y-1">{mainItems.map(renderNavItem)}</div>}
+  {openMain && <div className="space-y-1">{mainItems.map(renderNavItem)}</div>}
 
         {/* Acordeón Exercises */}
         <button
           onClick={() => setOpenExercises(!openExercises)}
           aria-expanded={openExercises}
-          className="w-full text-left flex items-center justify-between rounded-lg px-3 py-2 text-slate-100 dark:text-slate-900
-                     hover:bg-slate-50/20 dark:hover:bg-teal-500/40 font-medium transition-colors duration-300"
+          className="w-full text-left flex items-center justify-between rounded-lg px-3 py-2 text-slate-700 dark:text-slate-200
+                     hover:bg-sky-100 dark:hover:bg-slate-800 font-medium transition-colors duration-300"
         >
           <span className="text-sm font-semibold tracking-wide">Ejercicios · Jtest</span>
           <span className="text-xs opacity-70">{openExercises ? "▲" : "▼"}</span>
         </button>
-        {openExercises && <div className="pl-4 space-y-1">{exerciseItems.map(renderNavItem)}</div>}
+        {openExercises && <div className="space-y-1">{exerciseItems.map(renderNavItem)}</div>}
 
       </div>
     </aside>

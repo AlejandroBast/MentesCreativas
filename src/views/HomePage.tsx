@@ -36,7 +36,7 @@ export default function HomeContent() {
         transition={{ duration: 1 }}
         className="w-full max-w-3xl"
       >
-        <div className="relative rounded-3xl border border-slate-200/60 shadow-lg bg-white/80 backdrop-blur-sm dark:bg-slate-900/60 dark:border-slate-800/60 px-8 py-10">
+  <div className="relative rounded-3xl border border-sky-200/60 shadow-lg bg-sky-50/80 backdrop-blur-sm dark:bg-slate-900/60 dark:border-slate-800/60 px-8 py-10">
         {/* --- SVG accesible --- */}
         <svg
           className="w-32 h-32 mx-auto mb-6"
@@ -51,13 +51,13 @@ export default function HomeContent() {
           </g>
         </svg>
 
-        <h2 className="text-4xl md:text-5xl font-extrabold mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-700 dark:text-slate-100">
           Bienvenido a React 🚀
         </h2>
 
         <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto text-slate-700 dark:text-slate-300">
           Este es un ejemplo simple de una landing page responsiva usando{" "}
-          <span className="font-bold text-indigo-600 dark:text-indigo-400">
+          <span className="font-bold text-blue-600 dark:text-blue-400">
             React + TailwindCSS
           </span>.
         </p>
@@ -66,8 +66,8 @@ export default function HomeContent() {
           <button
             type="button"
             aria-label="Comenzar con el proyecto"
-            className="bg-indigo-600 text-white font-semibold px-6 py-3 rounded-2xl shadow-md
-                       hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-400/50
+            className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-2xl shadow-md
+                       hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-400/50
                        active:scale-95 transition"
           >
             Empezar
@@ -76,11 +76,11 @@ export default function HomeContent() {
           <button
             type="button"
             aria-label="Ver más información"
-            className="border-2 border-indigo-600 text-indigo-600 bg-white 
-                       dark:bg-transparent dark:border-indigo-400 dark:text-indigo-400
-                       px-6 py-3 rounded-2xl hover:bg-indigo-600 hover:text-white 
-                       dark:hover:bg-indigo-500 dark:hover:text-white 
-                       focus:outline-none focus:ring-4 focus:ring-indigo-400/40 
+            className="border-2 border-blue-600 text-blue-600 bg-white 
+                       dark:bg-transparent dark:border-blue-400 dark:text-blue-400
+                       px-6 py-3 rounded-2xl hover:bg-blue-600 hover:text-white 
+                       dark:hover:bg-blue-500 dark:hover:text-white 
+                       focus:outline-none focus:ring-4 focus:ring-blue-400/40 
                        active:scale-95 transition"
           >
             Ver más

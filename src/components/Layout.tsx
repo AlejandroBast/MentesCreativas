@@ -14,7 +14,7 @@ export default function Layout() {
         <Navbar />
 
         {/* Contenido dinámico (cada vista) */}
-        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:from-teal-600 dark:via-teal-700 dark:to-teal-600">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8 bg-gradient-to-br from-sky-50 via-sky-100 to-sky-50 dark:from-sky-900 dark:via-sky-800 dark:to-sky-900">
           <Outlet />
         </main>
       </div>

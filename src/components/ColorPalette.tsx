@@ -119,14 +119,14 @@ export default function ColorPalette({ currentHex, onSetHex, onRandom, onReset, 
           <>
             <button
               onClick={() => onSetModel("pizza")}
-              className={`px-3 py-1.5 rounded-lg text-sm ${currentModel === "pizza" ? "bg-emerald-600 text-white" : "border"}`}
+              className={`px-3 py-1.5 rounded-lg text-sm ${currentModel === "pizza" ? "bg-blue-600 text-white" : "border"}`}
               aria-pressed={currentModel === "pizza"}
             >
               Pizza
             </button>
             <button
               onClick={() => onSetModel("pastel")}
-              className={`px-3 py-1.5 rounded-lg text-sm ${currentModel === "pastel" ? "bg-emerald-600 text-white" : "border"}`}
+              className={`px-3 py-1.5 rounded-lg text-sm ${currentModel === "pastel" ? "bg-blue-600 text-white" : "border"}`}
               aria-pressed={currentModel === "pastel"}
             >
               Pastel

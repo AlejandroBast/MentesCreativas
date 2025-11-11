@@ -41,9 +41,9 @@ const Navbar: React.FC = () => {
 
   return (
     <header
-      className="h-14 sticky top-0 z-20 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-teal-600/60
-                 bg-white/80 dark:bg-teal-600 border-b border-slate-200 dark:border-teal-700 shadow-sm
-                 text-slate-900 dark:text-slate-900 transition-colors duration-500"
+      className="h-14 sticky top-0 z-20 backdrop-blur-md supports-[backdrop-filter]:bg-sky-50/60 dark:supports-[backdrop-filter]:bg-sky-800/60
+                 bg-sky-50/80 dark:bg-sky-800 border-b border-sky-200 dark:border-sky-900 shadow-sm
+                 text-slate-900 dark:text-slate-100 transition-colors duration-500"
       role="banner"
     >
       <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
           aria-label="Marca institucional"
         >
           <div
-            className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-emerald-600 text-white font-bold shadow-sm shadow-emerald-600/30 dark:bg-emerald-500"
+            className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-sky-500 text-white font-bold shadow-sm shadow-sky-400/30 dark:bg-sky-500"
           >
             U
           </div>
@@ -66,13 +66,13 @@ const Navbar: React.FC = () => {
             type="button"
             onClick={toggleTheme}
             aria-label="Cambiar entre modo claro y oscuro"
-            className="relative px-4 py-2 rounded-xl font-medium bg-slate-900 text-white
-                       hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-400/50
-                       active:scale-95 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200
-                       dark:focus:ring-slate-500/50 transition-colors duration-300 shadow-sm"
+            className="relative px-4 py-2 rounded-xl font-medium bg-blue-600 text-white
+                       hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300/50
+                       active:scale-95 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600
+                       dark:focus:ring-blue-400/50 transition-colors duration-300 shadow-sm"
           >
             <span className="inline-block">Tema</span>
-            <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-slate-900/10 dark:ring-slate-300/30" />
+            <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-blue-900/10 dark:ring-white/10" />
           </button>
         </nav>
       </div>
