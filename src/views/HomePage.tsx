@@ -41,9 +41,9 @@ export default function HomeContent() {
         <svg
           className="w-32 h-32 mx-auto mb-6"
           viewBox="0 0 841.9 595.3"
-          xmlns="http://www.w3.org/2000/svg"
+          xmlns="./public/mentecreativas.svg"
           role="img"
-          aria-label="Logo de React"
+          aria-label="MentesCreativas icon"
         >
           <g fill="#61DAFB">
             <path d="M421 296.5c0-25.6 20.8-46.4 46.4-46.4s46.4 20.8 46.4 46.4-20.8 46.4-46.4 46.4-46.4-20.8-46.4-46.4z" />
@@ -52,39 +52,18 @@ export default function HomeContent() {
         </svg>
 
         <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-slate-700 dark:text-slate-100">
-          Bienvenido a React 🚀
+          Bienvenido a Mentes Creativas!!
         </h2>
 
         <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto text-slate-700 dark:text-slate-300">
-          Este es un ejemplo simple de una landing page responsiva usando{" "}
+          Mentes Creativas te ayuda a mejorar tu entendimiento en {" "}
           <span className="font-bold text-blue-600 dark:text-blue-400">
-            React + TailwindCSS
+            ciencias, tecnologia y matematicas!
           </span>.
         </p>
 
         <div className="space-x-4">
-          <button
-            type="button"
-            aria-label="Comenzar con el proyecto"
-            className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-2xl shadow-md
-                       hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-400/50
-                       active:scale-95 transition"
-          >
-            Empezar
-          </button>
 
-          <button
-            type="button"
-            aria-label="Ver más información"
-            className="border-2 border-blue-600 text-blue-600 bg-white 
-                       dark:bg-transparent dark:border-blue-400 dark:text-blue-400
-                       px-6 py-3 rounded-2xl hover:bg-blue-600 hover:text-white 
-                       dark:hover:bg-blue-500 dark:hover:text-white 
-                       focus:outline-none focus:ring-4 focus:ring-blue-400/40 
-                       active:scale-95 transition"
-          >
-            Ver más
-          </button>
         </div>
   <span className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-sky-100/60 dark:ring-white/10" />
         </div>
