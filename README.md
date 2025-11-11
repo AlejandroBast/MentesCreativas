@@ -216,3 +216,63 @@ En conjunto, el módulo de Ciencias Naturales transforma un concepto abstracto e
 ## 5 Punto
 
 ## 6 Punto
+## 7. CI/CD Automatizado
+
+### 7.1 Flujo de Integración Continua (CI)
+Se configuró un flujo en GitHub Actions (`.github/workflows/jest.yml`) que ejecuta en cada *push* y *pull request* a `main`:
+
+1. Checkout del repositorio.
+2. Instalación reproducible con `npm ci`.
+3. `npm run type-check` para validar tipos de TypeScript.
+4. `npm run lint` para asegurar estilo y calidad estática.
+5. `npm test -- --ci` para correr pruebas unitarias (Jest + React Testing Library).
+6. `npm run build` para generar artefacto de producción Vite.
+7. Publicación del artefacto `dist` como *artifact* descargable.
+
+La matriz corre en Node 18 y 20 para asegurar compatibilidad. El job cancela ejecuciones anteriores en la misma rama (`concurrency`).
+
+### 7.2 Script Agregado de CI Local
+Se añadió el script agregado `npm run ci` en `package.json` que encadena: instalación, type-check, lint, test y build. Útil para reproducir el entorno de Actions localmente antes de hacer push.
+
+```bash
+npm run ci
+```
+
+### 7.3 Cobertura de Pruebas Unitarias
+Pruebas clave incluidas:
+- `App.test.tsx`: Verifica encabezado principal renderizado.
+- `ColorPalette.test.tsx`: Presets, cambio por HEX válido y copia al portapapeles.
+- `WaterCycle.test.tsx`: Navegación entre etapas, selección directa y reproducción automática con timers falsos.
+- `Robot3DView.test.tsx`: Emisión de eventos de vista y movimiento (mock del componente pesado Three.js).
+- `Robot3D.test.tsx`: Placeholder para futura ampliación sin romper la suite.
+
+### 7.4 Despliegue Continuo (CD)
+Workflow `deploy-pages.yml` publica automáticamente el build a **GitHub Pages** tras aprobarse / fusionarse en `main`:
+
+1. Repite validaciones: type-check, lint y test.
+2. Construye con `npm run build`.
+3. Sube `dist` como artefacto y luego realiza deploy con `actions/deploy-pages@v4`.
+
+#### Requisitos previos para Pages
+- Activar GitHub Pages con *Source: GitHub Actions* en la configuración del repositorio.
+- Verificar que no existan rutas absolutas problemáticas (Vite maneja raíz por defecto). Si se publica bajo subruta, ajustar `base` en `vite.config`.
+
+### 7.5 Beneficios Alineados a ISO/IEC 25010 (Usabilidad / Operabilidad)
+- *Confiabilidad en iteraciones rápidas:* cada cambio pasa por validaciones automáticas (previene regresiones visuales / lógicas).
+- *Mantenibilidad:* estructura clara de pruebas facilita refactor seguro.
+- *Eficiencia del equipo:* feedback inmediato en PRs sobre errores de lint, tipos o pruebas.
+
+### 7.6 Próximos Pasos Propuestos
+- Añadir reporte de cobertura (`--coverage`) y subirlo como artifact.
+- Integrar auditoría de accesibilidad (axe/lighthouse) con job separado nocturno o en PR.
+- Incorporar prueba de snapshot visual (Playwright) para vistas críticas.
+- Añadir badge de estado CI y de deploy en el encabezado de este README.
+
+---
+
+### Badges (pendiente de activar)
+Una vez corra el pipeline tras el primer push, agregar:
+```md
+![CI](https://github.com/<OWNER>/<REPO>/actions/workflows/jest.yml/badge.svg)
+![Deploy](https://github.com/<OWNER>/<REPO>/actions/workflows/deploy-pages.yml/badge.svg)
+```
