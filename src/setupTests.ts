@@ -50,3 +50,15 @@ Object.defineProperty(document, "documentElement", {
 Object.defineProperty(document, "dispatchEvent", {
   value: jest.fn(),
 });
+
+// Mock global para evitar errores ESM de OrbitControls en tests de integración
+jest.mock("three/examples/jsm/controls/OrbitControls", () => {
+  class MockOrbitControls {
+    enableDamping = false;
+    enableZoom = true;
+    target = { set: () => {} };
+    update() {}
+    dispose() {}
+  }
+  return { OrbitControls: MockOrbitControls };
+});
