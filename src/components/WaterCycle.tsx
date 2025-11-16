@@ -1,110 +1,615 @@
 import { useEffect, useRef, useState } from "react";
 
 const steps = [
-  { id: "evap", title: "Evaporación", text: "El agua se convierte en vapor por la energía del sol." },
-  { id: "cond", title: "Condensación", text: "El vapor asciende y forma nubes cuando se enfría." },
-  { id: "precip", title: "Precipitación", text: "Las gotas se unen y caen como lluvia, nieve o granizo." },
-  { id: "collect", title: "Acumulación", text: "El agua vuelve a ríos, lagos y océanos; parte se infiltra en el suelo." },
+  {
+    id: "evap",
+    title: "Evaporación",
+    text: "El agua se convierte en vapor por la energía del sol.",
+    color: "#E67E22",
+    description: "Proceso de transformación del agua líquida en vapor de agua"
+  },
+  {
+    id: "cond",
+    title: "Condensación",
+    text: "El vapor asciende y forma nubes cuando se enfría.",
+    color: "#5B7C99",
+    description: "El vapor se enfría y forma pequeñas gotitas de agua en las nubes"
+  },
+  {
+    id: "precip",
+    title: "Precipitación",
+    text: "Las gotas se unen y caen como lluvia, nieve o granizo.",
+    color: "#4A6FA5",
+    description: "Las gotas se agrupan y caen hacia la tierra"
+  },
+  {
+    id: "collect",
+    title: "Acumulación",
+    text: "El agua vuelve a ríos, lagos y océanos; parte se infiltra en el suelo.",
+    color: "#2B6E8E",
+    description: "El agua regresa a océanos, ríos y se filtra en el suelo"
+  },
 ];
 
+interface Particle {
+  id: string;
+  x: number;
+  y: number;
+  delay: number;
+}
+
 export default function WaterCycle() {
-  const [idx, setIdx] = useState(0);
-  const [playing, setPlaying] = useState(false);
-  const timer = useRef<number | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
-    if (playing) {
-      timer.current = window.setInterval(() => {
-        setIdx((i) => (i + 1) % steps.length);
-      }, 2500);
+    const generateParticles = () => {
+      const newParticles: Particle[] = [];
+      if (currentStep === 0) {
+        for (let i = 0; i < 5; i++) {
+          newParticles.push({
+            id: `evap-${i}`,
+            x: 100 + i * 60,
+            y: 380,
+            delay: i * 0.35,
+          });
+        }
+      } else if (currentStep === 2) {
+        for (let i = 0; i < 6; i++) {
+          newParticles.push({
+            id: `rain-${i}`,
+            x: 180 + (i % 3) * 180,
+            y: 140,
+            delay: i * 0.25,
+          });
+        }
+      }
+      setParticles(newParticles);
+    };
+
+    generateParticles();
+  }, [currentStep]);
+
+  useEffect(() => {
+    if (isPlaying) {
+      timerRef.current = window.setInterval(() => {
+        setCurrentStep((prev) => (prev + 1) % steps.length);
+      }, 4000);
     }
     return () => {
-      if (timer.current) window.clearInterval(timer.current);
-      timer.current = null;
+      if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [playing]);
+  }, [isPlaying]);
 
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent("watercycle-stage-changed", { detail: { index: idx, title: steps[idx].title } }));
-  }, [idx]);
+    window.dispatchEvent(
+      new CustomEvent("watercycle-stage-changed", {
+        detail: { index: currentStep, title: steps[currentStep].title },
+      })
+    );
+  }, [currentStep]);
+
+  const handlePrevious = () => {
+    setIsPlaying(false);
+    setCurrentStep((prev) => Math.max(0, prev - 1));
+  };
+
+  const handleNext = () => {
+    setIsPlaying(false);
+    setCurrentStep((prev) => Math.min(steps.length - 1, prev + 1));
+  };
+
+  const handleReset = () => {
+    setIsPlaying(false);
+    setCurrentStep(0);
+  };
+
+  const handleStepClick = (index: number) => {
+    setIsPlaying(false);
+    setCurrentStep(index);
+  };
 
   return (
-  <div className="bg-white dark:bg-slate-900 p-4 rounded shadow transition-colors border border-sky-100 dark:border-slate-800">
-      {/* Animaciones CSS locales para el SVG */}
+    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-50 p-8">
       <style>{`
-        @keyframes rise { 0%{ transform: translateY(8px); opacity:.2 } 100%{ transform: translateY(-14px); opacity:1 } }
-        @keyframes fall { 0%{ transform: translateY(-10px); opacity:.2 } 100%{ transform: translateY(18px); opacity:1 } }
-        @keyframes steam { 0%{ opacity:.2 } 50%{ opacity:.6 } 100%{ opacity:1 } }
-        @keyframes drift { 0%{ transform: translateX(-4px) } 100%{ transform: translateX(4px) } }
-        .evap-arrow { animation: rise 1.4s infinite ease-in; }
-        .precip-drop { animation: fall 1.1s infinite ease-in; }
-        .steam { animation: steam 2s infinite ease-in-out; }
-        .cloud { animation: drift 6s infinite ease-in-out alternate; }
+        @keyframes evaporate {
+          0% { 
+            transform: translateY(0) translateX(0) scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            opacity: 0.5;
+          }
+          100% {
+            transform: translateY(-160px) translateX(25px) scale(0.2);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes condenseMist {
+          0% {
+            transform: scale(0.8) translateY(40px);
+            opacity: 0.2;
+          }
+          100% {
+            transform: scale(1) translateY(0);
+            opacity: 0.8;
+          }
+        }
+        
+        @keyframes precipitate {
+          0% {
+            transform: translateY(-50px) scaleY(0.8);
+            opacity: 0;
+          }
+          15% {
+            opacity: 0.7;
+          }
+          85% {
+            opacity: 0.7;
+          }
+          100% {
+            transform: translateY(150px) scaleY(0.5);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes gentleDrift {
+          0%, 100% { transform: translateX(-10px) translateY(0px); }
+          50% { transform: translateX(10px) translateY(-5px); }
+        }
+        
+        @keyframes sunWarmth {
+          0%, 100% {
+            filter: drop-shadow(0 0 15px rgba(230, 126, 34, 0.6));
+          }
+          50% {
+            filter: drop-shadow(0 0 25px rgba(230, 126, 34, 0.8));
+          }
+        }
+        
+        @keyframes waterFlow {
+          0% {
+            strokeDashoffset: 60;
+          }
+          100% {
+            strokeDashoffset: 0;
+          }
+        }
+        
+        @keyframes subtleFloat {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-3px); }
+        }
+        
+        .evap-particle {
+          animation: evaporate 3.2s cubic-bezier(0.33, 0.66, 0.66, 1) infinite;
+        }
+        
+        .cloud-group {
+          animation: gentleDrift 10s ease-in-out infinite;
+        }
+        
+        .precipitate-drop {
+          animation: precipitate 2.8s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+        }
+        
+        .water-current {
+          stroke-dasharray: 60;
+          animation: waterFlow 2.5s linear infinite;
+        }
+        
+        .sun-warmth {
+          animation: sunWarmth 3.5s ease-in-out infinite;
+        }
+        
+        .mountain-accent {
+          animation: subtleFloat 4s ease-in-out infinite;
+        }
+        
+        .control-button {
+          transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .control-button:hover:not(:disabled) {
+          transform: translateY(-2px);
+        }
+        
+        .control-button:active:not(:disabled) {
+          transform: translateY(0px);
+        }
       `}</style>
 
-      <div className="md:flex gap-4 items-start">
-         <div className="mt-4 flex gap-2 flex-wrap">
-            
-            <button onClick={() => { setPlaying(false); setIdx((i) => Math.max(0, i - 1)); }} className="px-3 py-1.5 rounded border">Anterior</button>
-            <button onClick={() => setPlaying((p) => !p)} className={`px-3 py-1.5 rounded ${playing ? 'bg-red-500 text-white' : 'border'}`}>{playing ? 'Pausar' : 'Reproducir'}</button>
-            <button onClick={() => { setPlaying(false); setIdx((i) => Math.min(steps.length - 1, i + 1)); }} className="px-3 py-1.5 rounded border">Siguiente</button>
-            <button onClick={() => { setPlaying(false); setIdx(0); }} className="px-3 py-1.5 rounded border">Reiniciar</button>
-          </div>
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-slate-800 mb-3">
+            El Ciclo del Agua
+          </h1>
+          <p className="text-lg text-slate-600">
+            Descubre cómo el agua viaja continuamente a través de nuestro planeta
+          </p>
         </div>
-        
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold">{steps[idx].title}</h3>
-          <p className="mt-2 text-sm text-slate-800 dark:text-slate-300">{steps[idx].text}</p>
 
-         
+        {/* Main SVG Canvas */}
+        <div className="bg-gradient-to-b from-cyan-50 to-slate-50 rounded-2xl p-6 shadow-lg mb-8 border border-slate-200">
+          <svg
+            viewBox="0 0 800 520"
+            className="w-full h-auto"
+            role="img"
+            aria-label={`Ciclo del agua: ${steps[currentStep].title}`}
+            preserveAspectRatio="xMidYMid meet"
+          >
+            <defs>
+              <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#B8D4E8" />
+                <stop offset="40%" stopColor="#D4E5F0" />
+                <stop offset="100%" stopColor="#E8F1F5" />
+              </linearGradient>
 
-        <div className="w-full md:w-80 mt-4 md:mt-0">
-          <div className="border border-sky-100 dark:border-slate-800 rounded p-2 bg-white/80 dark:bg-slate-900/40">
-            <svg viewBox="0 0 240 160" className="w-full h-44">
-              {/* Agua acumulada */}
-              <rect x="0" y="120" width="240" height="40" fill="#60a5fa" opacity={idx === 3 ? 1 : 0.7} />
-              {/* Sol */}
-              <circle cx="200" cy="28" r="16" fill="#f59e0b" opacity={idx === 0 ? 1 : 0.6} />
-              {/* Vapor (evaporación) */}
-              {idx === 0 && (
-                <g className="steam" fill="#93c5fd">
-                  <path className="evap-arrow" style={{ animationDelay: "0ms" }} d="M40 120 l6 -12 l6 12" />
-                  <path className="evap-arrow" style={{ animationDelay: "200ms" }} d="M70 120 l6 -12 l6 12" />
-                  <path className="evap-arrow" style={{ animationDelay: "400ms" }} d="M100 120 l6 -12 l6 12" />
-                </g>
-              )}
+              <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#5B8AC5" />
+                <stop offset="100%" stopColor="#3D5A80" />
+              </linearGradient>
 
-              {/* Nubes (condensación) */}
-              <g className={idx === 1 ? "cloud" : ""} opacity={idx >= 1 ? 1 : 0.5}>
-                <ellipse cx="90" cy="50" rx="36" ry="14" fill="#eef6ff" />
-                <ellipse cx="120" cy="50" rx="26" ry="12" fill="#eef6ff" />
-                <ellipse cx="150" cy="50" rx="20" ry="10" fill="#eef6ff" />
-              </g>
+              <radialGradient id="sunGradient" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#FDD835" />
+                <stop offset="70%" stopColor="#E67E22" />
+                <stop offset="100%" stopColor="#D45C32" />
+              </radialGradient>
 
-              {/* Precipitación */}
-              {idx === 2 && (
-                <g fill="#3b82f6">
-                  <path className="precip-drop" style={{ animationDelay: "0ms" }} d="M90 60 q2 6 6 0 q-4 6 -6 0" />
-                  <path className="precip-drop" style={{ animationDelay: "120ms" }} d="M110 66 q2 6 6 0 q-4 6 -6 0" />
-                  <path className="precip-drop" style={{ animationDelay: "240ms" }} d="M130 62 q2 6 6 0 q-4 6 -6 0" />
-                </g>
-              )}
+              <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="0" dy="2" stdDeviation="2" floodOpacity="0.15" />
+              </filter>
 
-              {/* Ríos (acumulación y flujo) */}
-              {idx === 3 && (
-                <g>
-                  <path d="M0 120 C 40 110, 80 130, 120 120 S 200 140, 240 120" stroke="#3b82f6" strokeWidth="3" fill="none" />
-                  <polygon points="200,125 208,120 200,115" fill="#3b82f6" />
-                </g>
-              )}
-            </svg>
+              <filter id="cloudFilter">
+                <feGaussianBlur stdDeviation="1.5" result="coloredBlur" />
+                <feMerge>
+                  <feMergeNode in="coloredBlur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
 
-            <div className="mt-2 grid grid-cols-2 gap-2">
-              {steps.map((s, i) => (
-                <button key={s.id} onClick={() => { setPlaying(false); setIdx(i); }} className={`text-xs px-2 py-1 rounded ${i === idx ? 'bg-blue-600 text-white' : 'border'}`}>{s.title}</button>
-              ))}
+            {/* Sky background */}
+            <rect width="800" height="520" fill="url(#skyGradient)" />
+
+            <g>
+              <circle
+                cx="720"
+                cy="75"
+                r="40"
+                fill="url(#sunGradient)"
+                className="sun-warmth"
+                opacity="0.9"
+              />
+              <circle
+                cx="720"
+                cy="75"
+                r="30"
+                fill="#FDD835"
+                opacity="0.6"
+              />
+            </g>
+
+            <path
+              d="M 0 380 L 150 280 L 300 320 L 450 250 L 600 300 L 750 260 L 800 330 L 800 520 L 0 520 Z"
+              fill="#8B7E7B"
+              opacity="0.7"
+            />
+
+            <path
+              d="M 0 380 L 150 280 L 300 320 L 450 250 L 600 300 L 750 260 L 800 330 L 800 380 L 0 380 Z"
+              fill="#9B8E8B"
+              opacity="0.3"
+            />
+
+            {/* Soil/Ground vegetation - natural green */}
+            <rect y="380" width="800" height="140" fill="#7DB87D" opacity="0.25" />
+
+            <ellipse cx="140" cy="425" rx="200" ry="55" fill="url(#oceanGradient)" opacity="0.85" />
+
+            {/* Water surface ripples */}
+            <path
+              d="M 0 425 Q 50 420 100 425 T 200 425 T 300 425 T 400 425"
+              stroke="#4A7BA7"
+              strokeWidth="1.5"
+              fill="none"
+              opacity="0.3"
+              className={currentStep === 3 ? "water-current" : ""}
+            />
+
+            <g opacity={currentStep === 1 ? 0.92 : 0.2} className={currentStep === 1 ? "cloud-group" : ""}>
+              <ellipse cx="200" cy="105" rx="68" ry="38" fill="white" filter="url(#softShadow)" opacity="0.85" />
+              <ellipse cx="260" cy="118" rx="56" ry="32" fill="white" opacity="0.8" filter="url(#softShadow)" />
+              <ellipse cx="150" cy="125" rx="48" ry="28" fill="white" opacity="0.75" filter="url(#softShadow)" />
+              <ellipse cx="290" cy="105" rx="40" ry="24" fill="white" opacity="0.7" filter="url(#softShadow)" />
+            </g>
+
+            <g opacity={currentStep === 1 ? 0.92 : 0.2} style={{ animationDelay: "3s" }} className={currentStep === 1 ? "cloud-group" : ""}>
+              <ellipse cx="580" cy="140" rx="65" ry="36" fill="white" filter="url(#softShadow)" opacity="0.85" />
+              <ellipse cx="635" cy="152" rx="52" ry="30" fill="white" opacity="0.8" filter="url(#softShadow)" />
+              <ellipse cx="530" cy="158" rx="46" ry="26" fill="white" opacity="0.75" filter="url(#softShadow)" />
+            </g>
+
+            {/* Evaporation stage */}
+            {currentStep === 0 && (
+              <>
+                <defs>
+                  <marker
+                    id="arrowEvap"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="7"
+                    refY="2.5"
+                    orient="auto"
+                    markerUnits="strokeWidth"
+                  >
+                    <path d="M0,0 L0,5 L7,2.5 z" fill="#E67E22" opacity="0.5" />
+                  </marker>
+                </defs>
+
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <g key={`evap-group-${i}`} style={{ animationDelay: `${i * 0.4}s` }}>
+                    <line
+                      x1={80 + i * 100}
+                      y1="380"
+                      x2={80 + i * 100}
+                      y2="300"
+                      stroke="#E67E22"
+                      strokeWidth="1.5"
+                      opacity="0.25"
+                      markerEnd="url(#arrowEvap)"
+                      strokeDasharray="3,3"
+                    />
+                  </g>
+                ))}
+
+                {particles.map((p) => (
+                  <circle
+                    key={p.id}
+                    cx={p.x}
+                    cy={p.y}
+                    r="4"
+                    fill="#E67E22"
+                    opacity="0.5"
+                    className="evap-particle"
+                    style={{ animationDelay: `${p.delay}s` }}
+                  />
+                ))}
+
+                <text
+                  x="400"
+                  y="500"
+                  textAnchor="middle"
+                  fontSize="15"
+                  fontWeight="600"
+                  fill="#5B4C47"
+                  opacity="0.8"
+                >
+                  El calor del sol convierte lentamente el agua en vapor invisible
+                </text>
+              </>
+            )}
+
+            {/* Condensation stage */}
+            {currentStep === 1 && (
+              <>
+                {[0, 1, 2, 3].map((i) => (
+                  <path
+                    key={`vapor-${i}`}
+                    d={`M ${80 + i * 200} 350 Q ${110 + i * 200} 250 ${140 + i * 200} 140`}
+                    stroke="#5B7C99"
+                    strokeWidth="1.5"
+                    fill="none"
+                    opacity="0.25"
+                    strokeDasharray="4,4"
+                  />
+                ))}
+
+                <text
+                  x="400"
+                  y="500"
+                  textAnchor="middle"
+                  fontSize="15"
+                  fontWeight="600"
+                  fill="#5B4C47"
+                  opacity="0.8"
+                >
+                  El vapor asciende y se enfría, formando gotitas que crean nubes
+                </text>
+              </>
+            )}
+
+            {/* Precipitation stage */}
+            {currentStep === 2 && (
+              <>
+                {particles.map((p) => (
+                  <circle
+                    key={p.id}
+                    cx={p.x}
+                    cy={p.y}
+                    r="3.5"
+                    fill="#4A6FA5"
+                    className="precipitate-drop"
+                    style={{ animationDelay: `${p.delay}s` }}
+                    opacity="0.6"
+                  />
+                ))}
+
+                <text
+                  x="400"
+                  y="500"
+                  textAnchor="middle"
+                  fontSize="15"
+                  fontWeight="600"
+                  fill="#5B4C47"
+                  opacity="0.8"
+                >
+                  Las gotitas se agrupan y caen como lluvia hacia la tierra
+                </text>
+              </>
+            )}
+
+            {/* Accumulation stage */}
+            {currentStep === 3 && (
+              <>
+                <path
+                  d="M 400 350 Q 300 375 200 395 Q 150 415 140 430"
+                  stroke="#2B6E8E"
+                  strokeWidth="14"
+                  fill="none"
+                  opacity="0.5"
+                  strokeLinecap="round"
+                  filter="url(#softShadow)"
+                />
+
+                <path
+                  d="M 500 360 Q 350 390 250 415 Q 180 435 140 430"
+                  stroke="#5B8AC5"
+                  strokeWidth="10"
+                  fill="none"
+                  opacity="0.35"
+                  strokeLinecap="round"
+                />
+
+                {[0, 1, 2].map((i) => (
+                  <circle
+                    key={`flow-particle-${i}`}
+                    cx="400"
+                    cy="350"
+                    r="2.5"
+                    fill="#2B6E8E"
+                    opacity="0.5"
+                    style={{
+                      animation: `waterFlow 3.2s linear infinite`,
+                      animationDelay: `${i * 1.1}s`,
+                    }}
+                  />
+                ))}
+
+                <text
+                  x="400"
+                  y="500"
+                  textAnchor="middle"
+                  fontSize="15"
+                  fontWeight="600"
+                  fill="#5B4C47"
+                  opacity="0.8"
+                >
+                  El agua fluye hacia ríos, lagos y océanos, iniciando nuevamente el ciclo
+                </text>
+              </>
+            )}
+          </svg>
+        </div>
+
+        {/* Information Panel */}
+        <div
+          className="bg-white rounded-xl p-8 mb-8 shadow-md border-l-4 backdrop-blur-sm"
+          style={{ borderColor: steps[currentStep].color, backgroundColor: `${steps[currentStep].color}05` }}
+        >
+          <div className="flex items-center gap-4 mb-4">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
+              style={{ backgroundColor: `${steps[currentStep].color}15` }}
+            >
+              {currentStep === 0 && "☀️"}
+              {currentStep === 1 && "☁️"}
+              {currentStep === 2 && "💧"}
+              {currentStep === 3 && "🌊"}
+            </div>
+            <div>
+              <h2 className="text-3xl font-semibold mb-1" style={{ color: steps[currentStep].color }}>
+                {steps[currentStep].title}
+              </h2>
+              <p className="text-slate-600 text-sm">{steps[currentStep].description}</p>
             </div>
           </div>
+          <p className="text-slate-700 text-base leading-relaxed">
+            {steps[currentStep].text}
+          </p>
+        </div>
+
+        {/* Controls */}
+        <div className="flex flex-wrap gap-3 mb-8 justify-center">
+          <button
+            onClick={handlePrevious}
+            disabled={currentStep === 0}
+            className="control-button px-6 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 border border-slate-200 shadow-sm disabled:shadow-none"
+            aria-label="Paso anterior"
+          >
+            ← Anterior
+          </button>
+
+          <button
+            onClick={() => setIsPlaying(!isPlaying)}
+            className={`control-button px-7 py-2.5 rounded-lg font-medium text-white shadow-sm transition ${
+              isPlaying
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+            aria-label={isPlaying ? "Pausar animación" : "Reproducir animación"}
+          >
+            {isPlaying ? "⏸ Pausar" : "▶ Reproducir"}
+          </button>
+
+          <button
+            onClick={handleNext}
+            disabled={currentStep === steps.length - 1}
+            className="control-button px-6 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 border border-slate-200 shadow-sm disabled:shadow-none"
+            aria-label="Siguiente paso"
+          >
+            Siguiente →
+          </button>
+
+          <button
+            onClick={handleReset}
+            className="control-button px-6 py-2.5 bg-slate-600 hover:bg-slate-700 rounded-lg font-medium text-white shadow-sm"
+            aria-label="Reiniciar animación"
+          >
+            🔄 Reiniciar
+          </button>
+        </div>
+
+        {/* Step Indicators */}
+        <div className="flex flex-wrap gap-2 justify-center mb-6">
+          {steps.map((step, index) => (
+            <button
+              key={step.id}
+              onClick={() => handleStepClick(index)}
+              className={`control-button px-4 py-2 rounded-lg font-medium transition ${
+                index === currentStep
+                  ? "text-white shadow-sm"
+                  : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
+              }`}
+              style={{
+                backgroundColor: index === currentStep ? steps[currentStep].color : undefined,
+              }}
+              aria-current={index === currentStep}
+              aria-label={`${step.title} - ${index + 1} de ${steps.length}`}
+            >
+              {step.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Progress indicator */}
+        <div className="flex justify-center items-center gap-2">
+          {steps.map((_, index) => (
+            <div
+              key={index}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: index === currentStep ? "20px" : "6px",
+                height: "6px",
+                backgroundColor: index === currentStep ? steps[currentStep].color : "#d1d5db",
+              }}
+              aria-label={`Paso ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
     </div>
