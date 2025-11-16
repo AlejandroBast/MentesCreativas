@@ -1,96 +1,89 @@
 // src/components/Navbar.tsx
 import React, { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react"; // Iconos modernos
 
 const Navbar: React.FC = () => {
   const [isDark, setIsDark] = useState<boolean>(false);
 
-  // --- Inicializa el tema al cargar (mantiene preferencia del usuario) ---
+  // 🔄 Inicializa tema guardado
   useEffect(() => {
     const root = document.documentElement;
     const saved = localStorage.getItem("theme");
 
-    // Si existe preferencia guardada
     if (saved === "dark") {
       root.classList.add("dark");
-    } else if (saved === "light") {
-      root.classList.remove("dark");
-    } 
-    // Si no hay preferencia, usa la del sistema
-    else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
+      setIsDark(true);
     } else {
       root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
     }
-    const nowDark = saved === "dark" || (!saved && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDark(nowDark);
-
-    const onThemeChanged = () => {
-      // sincroniza estado si el cambio viene de otro lugar
-      const savedNow = localStorage.getItem("theme");
-      setIsDark(savedNow === "dark");
-    };
-    document.addEventListener("theme:changed", onThemeChanged);
-    return () => document.removeEventListener("theme:changed", onThemeChanged);
   }, []);
 
-  // --- Alterna entre claro / oscuro ---
+  // 🌗 Alternar tema
   const toggleTheme = () => {
     const root = document.documentElement;
-    const isDark = root.classList.contains("dark");
+    root.classList.toggle("dark");
 
-    if (isDark) {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-      document.dispatchEvent(new CustomEvent("theme:changed", { detail: { theme: "light" } }));
-    } else {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-      document.dispatchEvent(new CustomEvent("theme:changed", { detail: { theme: "dark" } }));
-    }
-    setIsDark(!isDark);
+    const newTheme = root.classList.contains("dark") ? "dark" : "light";
+    localStorage.setItem("theme", newTheme);
+    setIsDark(newTheme === "dark");
   };
 
   return (
-    <header
-      className="h-14 sticky top-0 z-20 backdrop-blur-md supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-sky-800/60
-                 bg-white/80 dark:bg-sky-800 border-b border-sky-100 dark:border-sky-900 shadow-sm
-                 text-slate-900 dark:text-slate-100 transition-colors duration-500"
-      role="banner"
-    >
-      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between">
-        {/* --- Lado izquierdo: logo + marca --- */}
-        <div
-          className="flex items-center gap-2 font-semibold select-none tracking-tight"
-          aria-label="Marca institucional"
-        >
-          <div
-            className="inline-flex items-center justify-center w-9 h-9 rounded-xl bg-sky-500 text-white font-bold shadow-sm shadow-sky-400/30 dark:bg-sky-500"
-          >
-            U
-          </div>
-          <span className="text-sm md:text-base">UCC · Prácticas Desarrollo</span>
-        </div>
+    <nav
+      className="
+        w-full h-16 px-6 flex items-center justify-between
+        backdrop-blur-xl 
+        border-b border-white/10
+        shadow-lg
 
-        {/* --- Lado derecho: botón de tema --- */}
-        <nav aria-label="Configuración de tema">
-          <button
-            type="button"
-            onClick={toggleTheme}
-            aria-label="Cambiar entre modo claro y oscuro"
-            aria-pressed={isDark}
-            className="relative px-4 py-2 rounded-xl font-medium bg-blue-600 text-white
-                       hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300/50
-                       active:scale-95 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600
-                       dark:focus:ring-blue-400/50 transition-colors duration-300 shadow-sm"
-          >
-            <span className="inline-block">{isDark ? "Oscuro" : "Claro"}</span>
-            <span className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-blue-900/10 dark:ring-white/10" />
-          </button>
-        </nav>
-      </div>
-    </header>
+        /* 🎨 Fondo dinámico con degradado sutil */
+        bg-gradient-to-r from-white/60 via-white/40 to-white/60
+        dark:from-[#0f0f11]/60 dark:via-[#121214]/40 dark:to-[#0f0f11]/60
+      "
+    >
+      {/* ✨ Título con brillo suave */}
+      <h1
+        className="
+          text-xl font-semibold tracking-wide
+          bg-clip-text text-transparent
+          bg-gradient-to-r from-indigo-500 to-purple-500
+          dark:from-indigo-300 dark:to-purple-300
+          animate-pulseSlow
+        "
+      >
+        Mi App
+      </h1>
+
+      {/* 🌗 Botón cambiar tema con animación */}
+      <button
+        onClick={toggleTheme}
+        className="
+          relative px-4 py-2 rounded-xl flex items-center gap-2
+          font-medium transition-all duration-300
+
+          /* 🎨 Colores del botón */
+          bg-neutral-200/80 hover:bg-neutral-300/90
+          dark:bg-neutral-800/80 dark:hover:bg-neutral-700/80
+
+          border border-neutral-300/60 dark:border-neutral-700/60
+          shadow-md dark:shadow-none
+
+          hover:scale-[1.03] active:scale-[0.97]
+        "
+      >
+        {isDark ? (
+          <>
+            <Sun className="w-5 h-5 text-yellow-400 animate-spinSlow" />
+            Modo Claro
+          </>
+        ) : (
+          <>
+            <Moon className="w-5 h-5 text-blue-500 animate-float" />
+            Modo Oscuro
+          </>
+        )}
+      </button>
+    </nav>
   );
 };
 

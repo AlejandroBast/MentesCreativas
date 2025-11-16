@@ -1,0 +1,371 @@
+/* ============================================
+   ANIMACIONES COMPLEJAS DE FONDO
+   ============================================ */
+
+.animated-bg-element {
+  position: absolute;
+  filter: blur(2px);
+}
+
+/* 🔵 CÍRCULO - Flotamiento con cambio de tamaño */
+.element-circle {
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.4), rgba(37, 99, 235, 0.1));
+  border-radius: 50%;
+  top: 10%;
+  left: 5%;
+  animation: float-complex 8s ease-in-out infinite, pulse-size 6s ease-in-out infinite, rotate-subtle 20s linear infinite;
+  box-shadow: 0 0 60px rgba(59, 130, 246, 0.3);
+}
+
+/* 🟣 CUADRADO - Rotación y movimiento diagonal */
+.element-square {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(139, 92, 246, 0.15));
+  border-radius: 30px;
+  top: 20%;
+  right: 8%;
+  animation: rotate-fast 10s linear infinite, move-diagonal-complex 12s ease-in-out infinite, scale-pulse 5s ease-in-out infinite;
+  box-shadow: 0 0 50px rgba(168, 85, 247, 0.25);
+  transform-origin: center;
+}
+
+/* 🔶 TRIÁNGULO - Movimiento complejo */
+.element-triangle {
+  width: 0;
+  height: 0;
+  border-left: 80px solid transparent;
+  border-right: 80px solid transparent;
+  border-bottom: 140px solid rgba(236, 72, 153, 0.3);
+  bottom: 15%;
+  left: 30%;
+  filter: blur(1px) drop-shadow(0 0 40px rgba(236, 72, 153, 0.2));
+  animation: float-triangle 7s ease-in-out infinite, rotate-triangle 15s linear infinite, wobble 4s ease-in-out infinite;
+}
+
+/* 💎 DIAMANTE - Pulsación y rotación */
+.element-diamond {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(45deg, rgba(239, 68, 68, 0.4), rgba(219, 39, 119, 0.2));
+  bottom: 25%;
+  right: 15%;
+  animation: rotate-diamond 8s linear infinite, pulse-diamond 4s ease-in-out infinite, move-sine 9s ease-in-out infinite;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  box-shadow: 0 0 40px rgba(239, 68, 68, 0.3);
+}
+
+/* 🌟 ESTRELLA - Deformación y parpadeo */
+.element-star {
+  width: 180px;
+  height: 180px;
+  top: 60%;
+  left: 60%;
+  background: linear-gradient(
+    135deg,
+    rgba(34, 197, 94, 0.3),
+    rgba(16, 185, 129, 0.15)
+  );
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+  );
+  animation: rotate-star 12s linear infinite, pulse-star 5s ease-in-out infinite, float-up 10s ease-in-out infinite;
+  box-shadow: 0 0 50px rgba(34, 197, 94, 0.2);
+}
+
+/* 🎆 LÍNEAS DINÁMICAS */
+.element-line {
+  width: 400px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(59, 130, 246, 0.4),
+    rgba(139, 92, 246, 0.4),
+    transparent
+  );
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: move-line-h 8s ease-in-out infinite, rotate-line 16s linear infinite, pulse-line 4s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+}
+
+/* ============================================
+   ANIMACIONES KEYFRAMES
+   ============================================ */
+
+@keyframes float-complex {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  25% {
+    transform: translateY(-30px) translateX(20px);
+  }
+  50% {
+    transform: translateY(-50px) translateX(-10px);
+  }
+  75% {
+    transform: translateY(-20px) translateX(25px);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes pulse-size {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate-subtle {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes rotate-fast {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes move-diagonal-complex {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-40px, -40px) rotate(90deg);
+  }
+  50% {
+    transform: translate(20px, -60px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-20px, 20px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+@keyframes scale-pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes float-triangle {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-40px) translateX(30px);
+  }
+  66% {
+    transform: translateY(-20px) translateX(-20px);
+  }
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+}
+
+@keyframes rotate-triangle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble {
+  0% {
+    transform: skewX(0deg);
+  }
+  25% {
+    transform: skewX(5deg);
+  }
+  50% {
+    transform: skewX(-5deg);
+  }
+  75% {
+    transform: skewX(5deg);
+  }
+  100% {
+    transform: skewX(0deg);
+  }
+}
+
+@keyframes rotate-diamond {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes pulse-diamond {
+  0% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.4);
+  }
+  100% {
+    filter: brightness(1);
+  }
+}
+
+@keyframes move-sine {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-30px) translateX(15px) rotate(90deg);
+  }
+  50% {
+    transform: translateY(-50px) translateX(0) rotate(180deg);
+  }
+  75% {
+    transform: translateY(-30px) translateX(-15px) rotate(270deg);
+  }
+  100% {
+    transform: translateY(0) translateX(0) rotate(360deg);
+  }
+}
+
+@keyframes rotate-star {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.1);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes pulse-star {
+  0% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3));
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 30px rgba(34, 197, 94, 0.6));
+  }
+  100% {
+    opacity: 0.6;
+    filter: drop-shadow(0 0 10px rgba(34, 197, 94, 0.3));
+  }
+}
+
+@keyframes float-up {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-40px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes move-line-h {
+  0% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-50px);
+  }
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes rotate-line {
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(360deg);
+  }
+}
+
+@keyframes pulse-line {
+  0% {
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 0.3;
+    filter: blur(2px);
+  }
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .element-circle {
+    width: 200px;
+    height: 200px;
+    top: 20%;
+    left: 0%;
+  }
+
+  .element-square {
+    width: 140px;
+    height: 140px;
+    top: 35%;
+    right: 0%;
+  }
+
+  .element-diamond {
+    width: 100px;
+    height: 100px;
+    bottom: 20%;
+    right: 5%;
+  }
+
+  .element-star {
+    width: 120px;
+    height: 120px;
+    top: 65%;
+    left: 50%;
+  }
+
+  .element-line {
+    width: 250px;
+    top: 50%;
+  }
+}
