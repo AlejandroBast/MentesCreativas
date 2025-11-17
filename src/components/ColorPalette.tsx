@@ -3,11 +3,13 @@ import { motion } from "framer-motion";
 
 interface Props {
   currentHex: string;
+  // eslint-disable-next-line no-unused-vars
   onSetHex: (hex: number) => void;
   onRandom: () => void;
   onReset: () => void;
   currentModel?: "pizza" | "pastel";
-  onSetModel?: (m: "pizza" | "pastel") => void;
+  // eslint-disable-next-line no-unused-vars
+  onSetModel?: (model: "pizza" | "pastel") => void;
 }
 
 // 🎨 Paleta de colores
@@ -106,7 +108,9 @@ export default function ColorPalette({
       await window.navigator.clipboard.writeText(`#${currentHexClean}`);
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    } catch {}
+    } catch (error) {
+      console.error("No se pudo copiar el código HEX", error);
+    }
   };
 
   const playAnimeAudio = () => {
