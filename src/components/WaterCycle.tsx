@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const steps = [
+const steps: { id: string; title: string; text: string; color: string; description: string; }[] = [
   {
     id: "evap",
     title: "Evaporación",
@@ -41,7 +41,7 @@ interface Particle {
 export default function WaterCycle() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {

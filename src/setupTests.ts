@@ -36,13 +36,22 @@ Object.defineProperty(window, "localStorage", {
   writable: true,
 });
 
+const classSet = new Set<string>();
+const mockClassList = {
+  toggle: (value: string) => {
+    const has = classSet.has(value);
+    if (has) classSet.delete(value);
+    else classSet.add(value);
+    return !has;
+  },
+  add: (value: string) => classSet.add(value),
+  remove: (value: string) => classSet.delete(value),
+  contains: (value: string) => classSet.has(value),
+};
+
 Object.defineProperty(document, "documentElement", {
   value: {
-    classList: {
-      toggle: jest.fn(),
-      add: jest.fn(),
-      remove: jest.fn(),
-    },
+    classList: mockClassList,
   },
   writable: true,
 });

@@ -164,24 +164,31 @@ export default function ColorPalette({
         </label>
 
         {/* Input HEX */}
-        <label className="flex items-center gap-2 text-xs font-medium">
-          <span>#</span>
-          <input
-            value={hexInput}
-            onChange={(e) => onHexChange(e.target.value)}
-            className="
-              px-2 py-1 rounded-lg border text-sm w-28 font-mono
-              bg-white/90 dark:bg-slate-800/70 shadow-sm
-              focus:ring-2 ring-blue-500
-            "
-            spellCheck={false}
-          />
-          <button
-            onClick={copyToClipboard}
-            className="px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white shadow-md hover:bg-blue-700"
-          >
-            {copied ? "✓" : "Copiar"}
-          </button>
+        <label
+          htmlFor="hex-code"
+          className="flex flex-col gap-2 text-xs font-medium"
+        >
+          <span>Código HEX</span>
+          <div className="flex items-center gap-2">
+            <span>#</span>
+            <input
+              id="hex-code"
+              value={hexInput}
+              onChange={(e) => onHexChange(e.target.value)}
+              className="
+                px-2 py-1 rounded-lg border text-sm w-28 font-mono
+                bg-white/90 dark:bg-slate-800/70 shadow-sm
+                focus:ring-2 ring-blue-500
+              "
+              spellCheck={false}
+            />
+            <button
+              onClick={copyToClipboard}
+              className="px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white shadow-md hover:bg-blue-700"
+            >
+              {copied ? "✓" : "Copiar"}
+            </button>
+          </div>
         </label>
 
         {/* Botones */}

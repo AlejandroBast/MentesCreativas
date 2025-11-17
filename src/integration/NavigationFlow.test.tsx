@@ -9,7 +9,7 @@ describe("Integración: flujo de navegación Sidebar", () => {
     render(<App />);
 
     // Espera a que cargue Layout (evita fallback Cargando…)
-    await screen.findByRole("banner", undefined, { timeout: 3000 });
+    await screen.findByRole("heading", { name: /Mi App/i }, { timeout: 3000 });
 
     // Abre acordeón de ejercicios (el sidebar está hidden por clases Tailwind; usamos hidden: true)
     const exercisesToggle = await screen.findByRole("button", { name: /Ejercicios · Jtest/i, hidden: true });
