@@ -14,12 +14,12 @@ interface Props {
 
 // 🎨 Paleta de colores
 const presets = [
-  { name: "Rojo", hex: 0xff4d4f },
-  { name: "Verde", hex: 0x22c55e },
-  { name: "Azul", hex: 0x3b82f6 },
-  { name: "Naranja", hex: 0xff7a45 },
-  { name: "Rosa", hex: 0xff69b4 },
-  { name: "Morado", hex: 0xa855f7 },
+  { name: "Rojo", hex: 0xff7a8c },
+  { name: "Verde", hex: 0x5ee4a0 },
+  { name: "Azul", hex: 0x82b1ff },
+  { name: "Naranja", hex: 0xffb07d },
+  { name: "Rosa", hex: 0xff8ec2 },
+  { name: "Morado", hex: 0xbd9df6 },
 ];
 
 // 🖼️ Imágenes que funcionan
@@ -136,10 +136,10 @@ export default function ColorPalette({
       <motion.div
         className="
           flex flex-wrap items-center gap-4 p-6 rounded-2xl
-          bg-gradient-to-br from-white/70 to-white/30 
-          dark:from-slate-900/60 dark:to-slate-800/40
-          backdrop-blur-xl border border-white/30 
-          shadow-[0_3px_25px_-4px_rgba(0,0,0,0.25)]
+          bg-gradient-to-br from-white/90 via-slate-100/80 to-slate-50/70
+          dark:from-slate-900/80 dark:via-slate-900/70 dark:to-slate-800/80
+          backdrop-blur-xl border border-white/40 dark:border-slate-800/60
+          shadow-[0_3px_25px_-4px_rgba(15,23,42,0.25)]
         "
       >
         {/* Presets */}
@@ -181,14 +181,14 @@ export default function ColorPalette({
               onChange={(e) => onHexChange(e.target.value)}
               className="
                 px-2 py-1 rounded-lg border text-sm w-28 font-mono
-                bg-white/90 dark:bg-slate-800/70 shadow-sm
+                bg-white/90 dark:bg-slate-700/60 shadow-sm
                 focus:ring-2 ring-blue-500
               "
               spellCheck={false}
             />
             <button
               onClick={copyToClipboard}
-              className="px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-white shadow-md hover:bg-blue-700"
+              className="px-3 py-1.5 rounded-lg text-xs bg-blue-600 text-dark shadow-md hover:bg-blue-700"
             >
               {copied ? "✓" : "Copiar"}
             </button>
@@ -198,14 +198,14 @@ export default function ColorPalette({
         {/* Botones */}
         <button
           onClick={onRandom}
-          className="px-4 py-2 rounded-xl text-sm bg-purple-600 text-white hover:bg-purple-700"
+          className="px-4 py-2 rounded-xl text-sm bg-sky-400 text-white hover:bg-sky-500"
         >
           Random
         </button>
 
         <button
           onClick={onReset}
-          className="px-4 py-2 rounded-xl text-sm border hover:bg-slate-200 dark:hover:bg-slate-700"
+          className="px-4 py-2 rounded-xl text-sm border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-200"
         >
           Reset
         </button>
@@ -229,7 +229,7 @@ export default function ColorPalette({
                 className={`px-3 py-1.5 rounded-xl text-sm ${
                   currentModel === model
                     ? "bg-blue-600 text-white"
-                    : "border hover:bg-slate-200 dark:hover:bg-slate-700"
+                    : "border hover:bg-slate-200 dark:hover:bg-slate-600"
                 }`}
               >
                 {model}
@@ -246,10 +246,10 @@ export default function ColorPalette({
         transition={{ delay: 0.2 }}
         className="
           p-6 rounded-2xl
-          bg-gradient-to-br from-blue-500/10 to-purple-500/10 
-          dark:from-blue-900/20 dark:to-purple-900/20
-          backdrop-blur-xl border border-blue-200/30 dark:border-purple-800/30 
-          shadow-[0_3px_25px_-4px_rgba(0,0,0,0.25)]
+          bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 
+          dark:from-blue-900/30 dark:via-blue-900/20 dark:to-purple-900/40
+          backdrop-blur-xl border border-slate-100/60 dark:border-purple-900/30 
+          shadow-[0_3px_25px_-4px_rgba(15,23,42,0.1)]
         "
       >
         <h3 className="text-lg font-bold mb-4">✨ Galería Animada</h3>
@@ -275,7 +275,7 @@ export default function ColorPalette({
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: showFact ? 1 : 0, y: showFact ? 0 : 10 }}
-          className="bg-gradient-to-r from-yellow-300/80 to-orange-300/80 dark:from-yellow-600/60 dark:to-orange-600/60 p-4 rounded-xl mb-4 text-center text-sm font-semibold text-slate-900 dark:text-white"
+          className="bg-gradient-to-r from-yellow-50/90 to-orange-50/80 dark:from-yellow-400/80 dark:to-orange-400/70 p-4 rounded-xl mb-4 text-center text-sm font-semibold text-slate-900 dark:text-slate-100"
         >
           💡 {currentFact}
         </motion.div>
@@ -292,7 +292,7 @@ export default function ColorPalette({
                 px-4 py-2 rounded-xl text-sm shadow-md transition-all
                 ${selectedGif === idx
                   ? "bg-blue-600 text-white"
-                  : "bg-slate-200 dark:bg-slate-700 hover:bg-slate-300"}
+                  : "bg-slate-200 dark:bg-slate-600 hover:bg-slate-300"}
               `}
             >
               {gif.name}
@@ -308,10 +308,10 @@ export default function ColorPalette({
         transition={{ delay: 0.3 }}
         className="
           p-6 rounded-2xl
-          bg-gradient-to-br from-pink-500/10 to-red-500/10 
-          dark:from-pink-900/20 dark:to-red-900/20
-          backdrop-blur-xl border border-pink-200/30 dark:border-red-800/30 
-          shadow-[0_3px_25px_-4px_rgba(0,0,0,0.25)]
+          bg-gradient-to-br from-white to-pink-50 
+          dark:from-purple-900/30 dark:via-pink-900/20 dark:to-red-900/30
+          backdrop-blur-xl border border-white/40 dark:border-pink-900/30 
+          shadow-[0_3px_25px_-4px_rgba(15,23,42,0.2)]
         "
       >
         <h3 className="text-lg font-bold mb-4">🎨 Paleta Visual</h3>
@@ -323,7 +323,7 @@ export default function ColorPalette({
               whileHover={{ y: -5, scale: 1.05 }}
               className="
                 p-4 rounded-xl shadow-md
-                bg-white/70 dark:bg-slate-800/50
+                bg-white/70 dark:bg-slate-700/40
                 backdrop-blur border border-white/30
                 text-center cursor-pointer transition-all
               "
@@ -347,10 +347,10 @@ export default function ColorPalette({
         transition={{ delay: 0.4 }}
         className="
           p-6 rounded-2xl
-          bg-gradient-to-br from-green-500/10 to-teal-500/10 
-          dark:from-green-900/20 dark:to-teal-900/20
-          backdrop-blur-xl border border-green-200/30 dark:border-teal-800/30 
-          shadow-[0_3px_25px_-4px_rgba(0,0,0,0.25)]
+          bg-gradient-to-br from-white to-slate-50 
+          dark:from-emerald-900/30 dark:via-teal-900/20 dark:to-slate-900/40
+          backdrop-blur-xl border border-white/40 dark:border-emerald-900/30 
+          shadow-[0_3px_25px_-4px_rgba(15,23,42,0.18)]
         "
       >
         <h3 className="text-lg font-bold mb-4">🌈 Modo Creativo</h3>

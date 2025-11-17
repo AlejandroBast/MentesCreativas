@@ -42,15 +42,16 @@ export default function Layout() {
             flex-1 overflow-y-auto p-6 md:p-8 
 
             /* FONDO */
-            bg-white/70 dark:bg-slate-900/70
+            bg-linear-to-br from-slate-50 via-white to-white
+            dark:bg-linear-to-br dark:from-slate-950/80 dark:via-slate-900/80 dark:to-slate-900/70
             backdrop-blur-xl
 
             /* BORDES + SOMBRA */
-            border-t border-white/20 dark:border-white/5
+            border-t border-slate-200/70 dark:border-slate-700/40
             shadow-inner
 
             /* Para que se vea sobre las figuras */
-            relative z-[5]
+            relative z-5
           "
         >
           <Outlet />

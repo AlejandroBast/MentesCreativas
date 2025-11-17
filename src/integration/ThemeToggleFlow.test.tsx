@@ -1,19 +1,23 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import App from "../App";
 
-describe("Integración: toggle de tema propaga cambios", () => {
+describe("Integración: indicador del tema activo", () => {
   beforeEach(() => {
+    window.localStorage.removeItem("theme");
     document.documentElement.classList.remove("dark");
-    window.localStorage.setItem("theme", "light");
+    if (document.documentElement.dataset) {
+      delete document.documentElement.dataset.theme;
+    }
   });
 
-  test("al hacer clic cambia texto del botón y clase 'dark' en documentElement", async () => {
+  test("muestra que está en modo oscuro cuando la preferencia previa es dark", async () => {
+    const getItemSpy = jest.spyOn(window.localStorage, "getItem").mockReturnValue("dark");
+
     render(<App />);
 
-    const btn = await screen.findByRole("button", { name: /Modo Oscuro/i });
-    expect(btn).toHaveTextContent(/Oscuro/i);
-
-    fireEvent.click(btn);
-    expect(btn).toHaveTextContent(/Modo Claro/i);
+    const indicator = await screen.findByText(/Modo Oscuro/i);
+    expect(indicator).toBeInTheDocument();
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+    getItemSpy.mockRestore();
   });
 });

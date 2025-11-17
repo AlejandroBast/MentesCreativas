@@ -112,7 +112,7 @@ export default function WaterCycle() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 via-blue-50 to-slate-50 p-8">
+    <div className="w-full min-h-screen bg-linear-to-br from-slate-50/70 via-white to-slate-100/90 dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-900/70 p-8">
       <style>{`
         @keyframes evaporate {
           0% { 
@@ -222,19 +222,19 @@ export default function WaterCycle() {
         }
       `}</style>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto text-slate-900 dark:text-slate-100 space-y-8">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-slate-800 mb-3">
+          <h1 className="text-5xl font-bold text-slate-900/90 dark:text-slate-100 mb-3">
             El Ciclo del Agua
           </h1>
-          <p className="text-lg text-slate-600">
+          <p className="text-lg text-slate-600 dark:text-slate-300">
             Descubre cómo el agua viaja continuamente a través de nuestro planeta
           </p>
         </div>
 
         {/* Main SVG Canvas */}
-        <div className="bg-gradient-to-b from-cyan-50 to-slate-50 rounded-2xl p-6 shadow-lg mb-8 border border-slate-200">
+        <div className="bg-linear-to-b from-white/80 via-slate-50 to-slate-100 rounded-3xl p-6 shadow-[0_20px_45px_rgba(15,23,42,0.15)] mb-8 border border-slate-200/40 dark:bg-slate-900/80 dark:border-slate-700/40">
           <svg
             viewBox="0 0 800 520"
             className="w-full h-auto"
@@ -508,13 +508,12 @@ export default function WaterCycle() {
 
         {/* Information Panel */}
         <div
-          className="bg-white rounded-xl p-8 mb-8 shadow-md border-l-4 backdrop-blur-sm"
-          style={{ borderColor: steps[currentStep].color, backgroundColor: `${steps[currentStep].color}05` }}
+          className="rounded-2xl p-8 mb-8 shadow-[0_20px_45px_rgba(15,23,42,0.15)] border border-white/30 dark:border-slate-800/60 border-l-4 bg-linear-to-br from-white/90 via-slate-50/80 to-blue-50/60 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-slate-900/60 backdrop-blur-2xl"
+          style={{ borderLeftColor: steps[currentStep].color }}
         >
           <div className="flex items-center gap-4 mb-4">
             <div
-              className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
-              style={{ backgroundColor: `${steps[currentStep].color}15` }}
+              className="w-14 h-14 rounded-full flex items-center justify-center text-2xl bg-white/70 dark:bg-slate-800/70"
             >
               {currentStep === 0 && "☀️"}
               {currentStep === 1 && "☁️"}
@@ -525,10 +524,10 @@ export default function WaterCycle() {
               <h2 className="text-3xl font-semibold mb-1" style={{ color: steps[currentStep].color }}>
                 {steps[currentStep].title}
               </h2>
-              <p className="text-slate-600 text-sm">{steps[currentStep].description}</p>
+              <p className="text-slate-600 dark:text-slate-300 text-sm">{steps[currentStep].description}</p>
             </div>
           </div>
-          <p className="text-slate-700 text-base leading-relaxed">
+          <p className="text-slate-700 dark:text-slate-200 text-base leading-relaxed">
             {steps[currentStep].text}
           </p>
         </div>
@@ -538,7 +537,7 @@ export default function WaterCycle() {
           <button
             onClick={handlePrevious}
             disabled={currentStep === 0}
-            className="control-button px-6 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 border border-slate-200 shadow-sm disabled:shadow-none"
+            className="control-button px-6 py-2.5 bg-white/80 dark:bg-slate-900/70 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 shadow-sm disabled:shadow-none"
             aria-label="Paso anterior"
           >
             ← Anterior
@@ -546,10 +545,10 @@ export default function WaterCycle() {
 
           <button
             onClick={() => setIsPlaying(!isPlaying)}
-            className={`control-button px-7 py-2.5 rounded-lg font-medium text-white shadow-sm transition ${
+            className={`control-button px-7 py-2.5 rounded-lg font-medium text-white shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 ${
               isPlaying
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-blue-600 hover:bg-blue-700"
+                ? "bg-linear-to-r from-orange-500 to-red-500 hover:from-orange-400 hover:to-red-400"
+                : "bg-linear-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500"
             }`}
             aria-label={isPlaying ? "Pausar animación" : "Reproducir animación"}
           >
@@ -559,7 +558,7 @@ export default function WaterCycle() {
           <button
             onClick={handleNext}
             disabled={currentStep === steps.length - 1}
-            className="control-button px-6 py-2.5 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 border border-slate-200 shadow-sm disabled:shadow-none"
+            className="control-button px-6 py-2.5 bg-white/80 dark:bg-slate-900/70 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 shadow-sm disabled:shadow-none"
             aria-label="Siguiente paso"
           >
             Siguiente →
@@ -567,7 +566,7 @@ export default function WaterCycle() {
 
           <button
             onClick={handleReset}
-            className="control-button px-6 py-2.5 bg-slate-600 hover:bg-slate-700 rounded-lg font-medium text-white shadow-sm"
+            className="control-button px-6 py-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium text-white shadow-sm"
             aria-label="Reiniciar animación"
           >
             🔄 Reiniciar
@@ -580,13 +579,13 @@ export default function WaterCycle() {
             <button
               key={step.id}
               onClick={() => handleStepClick(index)}
-              className={`control-button px-4 py-2 rounded-lg font-medium transition ${
+              className={`control-button px-4 py-2 rounded-lg font-medium transition shadow-sm ${
                 index === currentStep
-                  ? "text-white shadow-sm"
-                  : "bg-white text-slate-700 hover:bg-slate-50 border border-slate-200"
+                  ? "text-white"
+                  : "bg-white/80 text-slate-800 dark:bg-slate-900/50 dark:text-slate-100 border border-slate-200/70 dark:border-slate-800/60"
               }`}
               style={{
-                backgroundColor: index === currentStep ? steps[currentStep].color : undefined,
+                backgroundColor: index === currentStep ? steps[index].color : undefined,
               }}
               aria-current={index === currentStep}
               aria-label={`${step.title} - ${index + 1} de ${steps.length}`}
@@ -605,7 +604,7 @@ export default function WaterCycle() {
               style={{
                 width: index === currentStep ? "20px" : "6px",
                 height: "6px",
-                backgroundColor: index === currentStep ? steps[currentStep].color : "#d1d5db",
+                backgroundColor: index === currentStep ? steps[currentStep].color : "rgba(148,163,184,0.6)",
               }}
               aria-label={`Paso ${index + 1}`}
             />

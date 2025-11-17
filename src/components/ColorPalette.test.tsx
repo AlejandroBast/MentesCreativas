@@ -65,6 +65,6 @@ describe("ColorPalette", () => {
   test("clic en preset Rojo dispara onSetHex con el valor correcto", () => {
     const handlers = renderPalette();
     fireEvent.click(screen.getByTitle(/Rojo/i));
-    expect(handlers.onSetHex).toHaveBeenCalledWith(0xff4d4f);
+    expect(handlers.onSetHex).toHaveBeenCalledWith(0xff7a8c);
   });
 });
