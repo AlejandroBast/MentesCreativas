@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass";
+import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment";
 
 type MovementDir = "forward" | "back" | "left" | "right";
 type PoseName = "arms-up" | "arms-down" | "head-left" | "head-right" | "reset";
@@ -55,6 +60,9 @@ export default function Robot3D() {
   const gamepadIdx = useRef<number | null>(null);
   const [speed, setSpeed] = useState(1);
   const speedRef = useRef(1);
+  const blinkRef = useRef({ timer: 0, next: 2.5, phase: 0, active: false });
+  const composerRef = useRef<EffectComposer | null>(null);
+  const outlinePassRef = useRef<OutlinePass | null>(null);
 
   useEffect(() => {
     speedRef.current = speed;
@@ -75,6 +83,11 @@ export default function Robot3D() {
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.Fog(0x0f172a, 18, 40);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    const env = new RoomEnvironment();
+    const envTex = pmrem.fromScene(env).texture;
+    scene.environment = envTex;
 
     const camera = new THREE.PerspectiveCamera(48, stage.clientWidth / stage.clientHeight, 0.1, 100);
     camera.position.set(3.5, 2.4, 3.4);
@@ -137,6 +150,20 @@ export default function Robot3D() {
     const projectileRaycaster = new THREE.Raycaster();
     let highlighted: THREE.Mesh | null = null;
 
+    const composer = new EffectComposer(renderer);
+    const renderPass = new RenderPass(scene, camera);
+    composer.addPass(renderPass);
+    const outlinePass = new OutlinePass(new THREE.Vector2(stage.clientWidth, stage.clientHeight), scene, camera);
+    outlinePass.edgeStrength = 2.5;
+    outlinePass.edgeGlow = 0.7;
+    outlinePass.visibleEdgeColor.set(0x38bdf8);
+    outlinePass.hiddenEdgeColor.set(0x0ea5e9);
+    composer.addPass(outlinePass);
+    const bloomPass = new UnrealBloomPass(new THREE.Vector2(stage.clientWidth, stage.clientHeight), 0.6, 0.2, 0.85);
+    composer.addPass(bloomPass);
+    composerRef.current = composer;
+    outlinePassRef.current = outlinePass;
+
     const restoreMaterial = (mesh: THREE.Mesh) => {
       const mat = mesh.material as THREE.MeshStandardMaterial;
       if (mesh.userData.baseEmissive instanceof THREE.Color) {
@@ -164,6 +191,7 @@ export default function Robot3D() {
         mat.transparent = false;
       }
       highlighted = mesh;
+      if (outlinePassRef.current) outlinePassRef.current.selectedObjects = mesh ? [mesh] : [];
     };
 
     const onPointerMove = (ev: PointerEvent) => {
@@ -435,7 +463,14 @@ export default function Robot3D() {
       }
     };
 
-    const onTheme = () => renderer.setClearColor(getClear(), 1);
+    const onTheme = () => {
+      renderer.setClearColor(getClear(), 1);
+      const dark = document.documentElement.classList.contains("dark");
+      if (outlinePassRef.current) {
+        outlinePassRef.current.visibleEdgeColor.set(dark ? 0x22d3ee : 0x0ea5e9);
+        outlinePassRef.current.hiddenEdgeColor.set(dark ? 0x06b6d4 : 0x38bdf8);
+      }
+    };
 
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
@@ -656,6 +691,39 @@ export default function Robot3D() {
       });
     };
 
+    const updateBlink = (delta: number) => {
+      blinkRef.current.timer += delta;
+      const eyeL = partsRef.current.eyeLeft as THREE.Mesh | undefined;
+      const eyeR = partsRef.current.eyeRight as THREE.Mesh | undefined;
+      const chest = partsRef.current.chest as THREE.Mesh | undefined;
+      if (!blinkRef.current.active && blinkRef.current.timer >= blinkRef.current.next) {
+        blinkRef.current.active = true;
+        blinkRef.current.phase = 0;
+        blinkRef.current.timer = 0;
+        blinkRef.current.next = 2 + Math.random() * 3;
+      }
+      if (blinkRef.current.active) {
+        blinkRef.current.phase += delta * 8;
+        const v = 1 - Math.abs(Math.sin(Math.min(blinkRef.current.phase, Math.PI)));
+        const s = Math.max(0.2, v);
+        if (eyeL && eyeR) {
+          eyeL.scale.y = s;
+          eyeR.scale.y = s;
+        }
+        if (blinkRef.current.phase >= Math.PI) {
+          blinkRef.current.active = false;
+          if (eyeL && eyeR) {
+            eyeL.scale.y = 1;
+            eyeR.scale.y = 1;
+          }
+        }
+      }
+      if (chest) {
+        const mat = chest.material as THREE.MeshStandardMaterial;
+        mat.emissiveIntensity = 1.3 + Math.sin(clock.getElapsedTime() * 3) * 0.4;
+      }
+    };
+
     const updateProjectiles = (delta: number) => {
       if (!projectileGroupRef.current) return;
       const state = gameRef.current;
@@ -675,7 +743,8 @@ export default function Robot3D() {
         proj.mesh.position.addScaledVector(proj.velocity, delta);
         proj.mesh.rotation.x += proj.spin * delta;
         proj.mesh.rotation.y += proj.spin * 0.4 * delta;
-        if (proj.mesh.position.length() < 0.5) {
+        const robotPos = robotRef.current?.position ?? new THREE.Vector3(0, ROBOT_BASE_HEIGHT, 0);
+        if (proj.mesh.position.distanceTo(robotPos) < 0.6) {
           destroyProjectile(proj, false, true);
           return false;
         }
@@ -696,7 +765,9 @@ export default function Robot3D() {
       updatePoses(delta);
       updateAccessories(delta);
       updateProjectiles(delta);
-      renderer.render(scene, camera);
+      updateBlink(delta);
+      if (composerRef.current) composerRef.current.render();
+      else renderer.render(scene, camera);
       animationHandle.current = requestAnimationFrame(animate);
     };
     animate();
@@ -707,6 +778,8 @@ export default function Robot3D() {
       renderer.setSize(w, h);
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
+      composerRef.current?.setSize(w, h);
+      outlinePassRef.current?.setSize(w, h);
     };
     const ro = new ResizeObserver(onResize);
     ro.observe(stage);
@@ -743,6 +816,9 @@ export default function Robot3D() {
       projectileGroupRef.current = null;
       controls.dispose();
       renderer.dispose();
+      composerRef.current = null;
+      outlinePassRef.current = null;
+      pmrem.dispose();
       ro.disconnect();
       try {
         stage.removeChild(renderer.domElement);

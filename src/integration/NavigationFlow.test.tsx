@@ -9,7 +9,7 @@ describe("Integración: flujo de navegación Sidebar", () => {
     render(<App />);
 
     // Espera a que cargue Layout (evita fallback Cargando…)
-    await screen.findByRole("heading", { name: /Mi App/i }, { timeout: 3000 });
+    await screen.findByTitle(/Mentes Creativas/i, {}, { timeout: 3000 });
 
     // Abre acordeón de ejercicios (el sidebar está hidden por clases Tailwind; usamos hidden: true)
     const exercisesToggle = await screen.findByRole("button", { name: /Ejercicios · Jtest/i, hidden: true });
@@ -19,8 +19,8 @@ describe("Integración: flujo de navegación Sidebar", () => {
     const robotLink = await screen.findByRole("link", { name: /Robot 3D - Tecnología/i, hidden: true });
     fireEvent.click(robotLink);
     // Fallback Suspense muestra Cargando… por un instante
-    await screen.findByText(/Robot 3D/i);
+    await screen.findByText(/^Robot 3D$/i);
     // Validación mínima: seguimos en la vista mockeada
-    expect(screen.getByText(/Robot 3D/i)).toBeInTheDocument();
+    expect(screen.getByText(/^Robot 3D$/i)).toBeInTheDocument();
   });
 });

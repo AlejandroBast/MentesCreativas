@@ -75,6 +75,7 @@ export default function ColorPalette({
   onSetModel,
 }: Props) {
   const [hexInput, setHexInput] = useState<string>(() => `#${currentHex.toUpperCase()}`);
+  const [hsl, setHsl] = useState<{ h: number; s: number; l: number }>(() => hexToHsl(currentHex));
   const [selectedGif, setSelectedGif] = useState(0);
   const [copied, setCopied] = useState(false);
   const [showFact, setShowFact] = useState(false);
@@ -87,6 +88,7 @@ export default function ColorPalette({
   );
 
   useEffect(() => setHexInput(`#${currentHexClean}`), [currentHexClean]);
+  useEffect(() => setHsl(hexToHsl(currentHexClean)), [currentHexClean]);
 
   const onPick = (val: string) => {
     const clean = val.replace("#", "");
@@ -101,6 +103,14 @@ export default function ColorPalette({
       const n = parseInt(clean, 16);
       if (!Number.isNaN(n)) onSetHex(n);
     }
+  };
+
+  const onHslChange = (partial: Partial<{ h: number; s: number; l: number }>) => {
+    const next = { ...hsl, ...partial };
+    setHsl(next);
+    const hex = hslToHex(next.h, next.s, next.l);
+    const n = parseInt(hex, 16);
+    if (!Number.isNaN(n)) onSetHex(n);
   };
 
   const copyToClipboard = async () => {
@@ -194,6 +204,45 @@ export default function ColorPalette({
             </button>
           </div>
         </label>
+
+        <div className="flex items-center gap-4">
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <span>H</span>
+            <input
+              type="range"
+              min={0}
+              max={360}
+              value={hsl.h}
+              onChange={(e) => onHslChange({ h: e.target.valueAsNumber })}
+              className="w-28"
+            />
+            <span className="w-10 text-right">{Math.round(hsl.h)}</span>
+          </label>
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <span>S</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={hsl.s}
+              onChange={(e) => onHslChange({ s: e.target.valueAsNumber })}
+              className="w-28"
+            />
+            <span className="w-10 text-right">{Math.round(hsl.s)}%</span>
+          </label>
+          <label className="flex items-center gap-2 text-xs font-medium">
+            <span>L</span>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              value={hsl.l}
+              onChange={(e) => onHslChange({ l: e.target.valueAsNumber })}
+              className="w-28"
+            />
+            <span className="w-10 text-right">{Math.round(hsl.l)}%</span>
+          </label>
+        </div>
 
         {/* Botones */}
         <button
@@ -368,4 +417,58 @@ export default function ColorPalette({
       </motion.div>
     </motion.div>
   );
+}
+
+function hexToHsl(hex: string): { h: number; s: number; l: number } {
+  const clean = hex.replace(/[^0-9a-fA-F]/g, "").slice(-6);
+  const r = parseInt(clean.slice(0, 2), 16) / 255;
+  const g = parseInt(clean.slice(2, 4), 16) / 255;
+  const b = parseInt(clean.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      default:
+        h = (r - g) / d + 4;
+    }
+    h /= 6;
+  }
+  return { h: h * 360, s: s * 100, l: l * 100 };
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  const hh = (h % 360 + 360) % 360 / 360;
+  const ss = Math.max(0, Math.min(100, s)) / 100;
+  const ll = Math.max(0, Math.min(100, l)) / 100;
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  let r: number, g: number, b: number;
+  if (ss === 0) {
+    r = g = b = ll;
+  } else {
+    const q = ll < 0.5 ? ll * (1 + ss) : ll + ss - ll * ss;
+    const p = 2 * ll - q;
+    r = hue2rgb(p, q, hh + 1 / 3);
+    g = hue2rgb(p, q, hh);
+    b = hue2rgb(p, q, hh - 1 / 3);
+  }
+  const toHex = (x: number) => Math.round(x * 255).toString(16).padStart(2, "0");
+  return `${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
 }

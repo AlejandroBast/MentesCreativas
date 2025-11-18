@@ -1,11 +1,12 @@
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
 
 function App() {
+  const Router = process.env.NODE_ENV === "test" ? MemoryRouter : BrowserRouter;
   return (
-    <BrowserRouter>
+    <Router>
       <AppRoutes />
-    </BrowserRouter>
+    </Router>
   );
 }
 

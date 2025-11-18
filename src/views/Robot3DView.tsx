@@ -18,6 +18,8 @@ export default function Robot3DView() {
   const [gameRunning, setGameRunning] = useState(false);
   const [life, setLife] = useState({ value: 100, max: 100 });
   const [gameOver, setGameOver] = useState(false);
+  const [selectedPiece, setSelectedPiece] = useState<string | null>(null);
+  const [robotSpeed, setRobotSpeed] = useState(1);
 
   const toggleAccessory = (name: AccessoryName) => {
     setAccessoryState((prev) => {
@@ -59,6 +61,15 @@ export default function Robot3DView() {
     };
     window.addEventListener("robot3d-game-over", onGameOver as EventListener);
     return () => window.removeEventListener("robot3d-game-over", onGameOver as EventListener);
+  }, []);
+
+  useEffect(() => {
+    const onPiece = (ev: CustomEvent) => {
+      const name = (ev.detail as { name?: string | null })?.name ?? null;
+      setSelectedPiece(name);
+    };
+    window.addEventListener("robot3d-piece-selected", onPiece as EventListener);
+    return () => window.removeEventListener("robot3d-piece-selected", onPiece as EventListener);
   }, []);
 
   const startGame = () => {
@@ -119,6 +130,36 @@ export default function Robot3DView() {
 
       <div className="rounded-2xl border border-sky-100 dark:border-slate-800/60 bg-white/70 dark:bg-slate-900/20 shadow-sm overflow-hidden">
         <Robot3D />
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">Pieza resaltada:</span>
+          <span className="rounded-full border border-slate-200 px-3 py-1 text-xs shadow-sm bg-white/80 dark:bg-slate-900/60 dark:border-slate-700 dark:text-slate-200">
+            {selectedPiece ?? "Sin selección"}
+          </span>
+        </div>
+        <div className="flex items-center gap-3">
+          <label className="text-xs font-semibold text-slate-600 dark:text-slate-300">Velocidad</label>
+          <input
+            type="range"
+            min={0.2}
+            max={3}
+            step={0.1}
+            value={robotSpeed}
+            onChange={(e) => {
+              const v = Number(e.target.value);
+              setRobotSpeed(v);
+              window.dispatchEvent(new CustomEvent("robot3d-speed", { detail: v }));
+            }}
+            className="w-40 accent-indigo-600"
+          />
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent("robot3d-setview", { detail: "reset" }))}
+            className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white text-slate-700 shadow-sm hover:bg-slate-50 transition dark:bg-slate-900/60 dark:border-slate-700 dark:text-slate-200"
+          >
+            Reiniciar vista/pose
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">
@@ -211,7 +252,13 @@ export default function Robot3DView() {
           onClick={() => window.dispatchEvent(new CustomEvent("robot3d-walk", { detail: { mode: "start", pattern: "figure8" } }))}
           className="px-4 py-2 rounded-lg bg-emerald-500 text-white font-medium shadow-sm hover:bg-emerald-600 transition"
         >
-          Caminar
+          Figura 8
+        </button>
+        <button
+          onClick={() => window.dispatchEvent(new CustomEvent("robot3d-walk", { detail: { mode: "start", pattern: "circle" } }))}
+          className="px-4 py-2 rounded-lg bg-sky-500 text-white font-medium shadow-sm hover:bg-sky-600 transition"
+        >
+          Círculo
         </button>
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("robot3d-walk", { detail: { mode: "stop" } }))}

@@ -1,5 +1,39 @@
 # Desarrollo Actividad
 
+## Guía rápida del proyecto
+
+- Stack: React + Vite (TypeScript), Tailwind, react-router-dom, Three.js.
+- Desarrollo: `npm run dev` arranca en `http://localhost:5173/`.
+- Calidad: `npm run lint`, `npm run type-check`, `npm test`.
+- Producción: `npm run build` y `npm run preview`.
+- Node recomendado: 18+.
+
+### Rutas y módulos actuales
+
+- `/` Dashboard con tarjetas, estadísticas y accesos rápidos.
+- `/color3d` Matemáticas 3D: paleta HEX/HSL y vista de modelo.
+- `/robot3d` Tecnología: robot 3D con cámara, animaciones y resaltado.
+- `/watercycle` Ciencias: ciclo del agua con etapas animadas y panel informativo.
+- `/settings` Configuración: tema y panel descriptivo de accesibilidad.
+
+### Preferencias y eventos
+
+- Estadísticas: clave `mc:stats`, evento `stats:updated`.
+- Accesibilidad: clave `mc:a11y` con `highContrast`, `reduceMotion`, `focusVisible`; evento `a11y:changed`.
+- Robot 3D: `robot3d-speed`, `robot3d-setview`, `robot3d-walk`, `robot3d-game-over`, `robot3d-piece-selected`.
+
+### Accesibilidad
+
+- Controles etiquetados y foco visible en dashboard y vistas.
+- Opción de alto contraste y reducir movimiento desde el dashboard.
+- Auditoría opcional en desarrollo con `axe-core` si está disponible.
+
+### Animaciones y visuales
+
+- Robot: postprocesado con bloom y outline, entorno con RoomEnvironment, parpadeo de ojos y pulso de luz del pecho.
+- Ciclo del Agua: partículas densificadas con variaciones de tamaño y tiempo, gotas con glow y panel animado.
+- Sidebar: gradientes, estados hover/activo y colores por módulo.
+
 ## 1. Aplicación del modelo de calidad ISO/IEC 25010
 
 ### Atributo seleccionado: 

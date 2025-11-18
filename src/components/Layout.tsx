@@ -40,17 +40,10 @@ export default function Layout() {
         <main
           className="
             flex-1 overflow-y-auto p-6 md:p-8 
-
-            /* FONDO */
-            bg-linear-to-br from-slate-50 via-white to-white
-            dark:bg-linear-to-br dark:from-slate-950/80 dark:via-slate-900/80 dark:to-slate-900/70
+            bg-transparent
             backdrop-blur-xl
-
-            /* BORDES + SOMBRA */
             border-t border-slate-200/70 dark:border-slate-700/40
             shadow-inner
-
-            /* Para que se vea sobre las figuras */
             relative z-5
           "
         >

@@ -71,3 +71,39 @@ jest.mock("three/examples/jsm/controls/OrbitControls", () => {
   }
   return { OrbitControls: MockOrbitControls };
 });
+
+jest.mock("three/examples/jsm/postprocessing/EffectComposer", () => {
+  class MockComposer {
+    setSize() {}
+    render() {}
+    addPass() {}
+  }
+  return { EffectComposer: MockComposer };
+});
+jest.mock("three/examples/jsm/postprocessing/RenderPass", () => {
+  class MockRenderPass {
+    constructor() {}
+  }
+  return { RenderPass: MockRenderPass };
+});
+jest.mock("three/examples/jsm/postprocessing/UnrealBloomPass", () => {
+  class MockBloomPass {
+    constructor() {}
+  }
+  return { UnrealBloomPass: MockBloomPass };
+});
+jest.mock("three/examples/jsm/postprocessing/OutlinePass", () => {
+  class MockOutlinePass {
+    selectedObjects = [] as any[];
+    visibleEdgeColor = { set: () => {} } as any;
+    hiddenEdgeColor = { set: () => {} } as any;
+    setSize() {}
+    constructor() {}
+  }
+  return { OutlinePass: MockOutlinePass };
+});
+jest.mock("three/examples/jsm/environments/RoomEnvironment", () => {
+  class MockRoomEnvironment {}
+  return { RoomEnvironment: MockRoomEnvironment };
+});
+jest.mock("./components/Robot3D", () => () => null);

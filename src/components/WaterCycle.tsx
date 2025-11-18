@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 const steps: { id: string; title: string; text: string; color: string; description: string; }[] = [
   {
@@ -36,6 +37,8 @@ interface Particle {
   x: number;
   y: number;
   delay: number;
+  dur: number;
+  r: number;
 }
 
 export default function WaterCycle() {
@@ -48,21 +51,29 @@ export default function WaterCycle() {
     const generateParticles = () => {
       const newParticles: Particle[] = [];
       if (currentStep === 0) {
-        for (let i = 0; i < 5; i++) {
+        const count = 26;
+        for (let i = 0; i < count; i++) {
           newParticles.push({
             id: `evap-${i}`,
-            x: 100 + i * 60,
+            x: 60 + Math.random() * 240,
             y: 380,
-            delay: i * 0.35,
+            delay: i * 0.12 + Math.random() * 0.18,
+            dur: 2.6 + Math.random() * 1.2,
+            r: 2.5 + Math.random() * 2.5,
           });
         }
       } else if (currentStep === 2) {
-        for (let i = 0; i < 6; i++) {
+        const cols = [180, 360, 540];
+        const count = 24;
+        for (let i = 0; i < count; i++) {
+          const c = cols[i % cols.length];
           newParticles.push({
             id: `rain-${i}`,
-            x: 180 + (i % 3) * 180,
-            y: 140,
-            delay: i * 0.25,
+            x: c + (Math.random() * 20 - 10),
+            y: 140 + (Math.random() * 10 - 5),
+            delay: i * 0.1 + Math.random() * 0.2,
+            dur: 2.2 + Math.random() * 0.8,
+            r: 2.5 + Math.random() * 2,
           });
         }
       }
@@ -112,7 +123,7 @@ export default function WaterCycle() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-linear-to-br from-slate-50/70 via-white to-slate-100/90 dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-900/70 p-8">
+    <div className="w-full min-h-screen bg-linear-to-br from-slate-50/70 via-white to-slate-100/90 dark:from-slate-950 dark:via-slate-900/80 dark:to-slate-900/70 p-8 bg-pan">
       <style>{`
         @keyframes evaporate {
           0% { 
@@ -182,6 +193,22 @@ export default function WaterCycle() {
         @keyframes subtleFloat {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-3px); }
+        }
+
+        @keyframes bgPan {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .bg-pan {
+          background-image: linear-gradient(120deg, rgba(148,163,184,0.25), rgba(56,189,248,0.15), rgba(16,185,129,0.15));
+          background-size: 200% 200%;
+          animation: bgPan 18s ease-in-out infinite;
+        }
+
+        .drop-glow {
+          filter: drop-shadow(0 2px 4px rgba(59,130,246,0.35));
         }
         
         .evap-particle {
@@ -372,11 +399,11 @@ export default function WaterCycle() {
                     key={p.id}
                     cx={p.x}
                     cy={p.y}
-                    r="4"
+                    r={p.r}
                     fill="#E67E22"
-                    opacity="0.5"
+                    opacity="0.55"
                     className="evap-particle"
-                    style={{ animationDelay: `${p.delay}s` }}
+                    style={{ animationDelay: `${p.delay}s`, animationDuration: `${p.dur}s` }}
                   />
                 ))}
 
@@ -431,11 +458,11 @@ export default function WaterCycle() {
                     key={p.id}
                     cx={p.x}
                     cy={p.y}
-                    r="3.5"
+                    r={p.r}
                     fill="#4A6FA5"
-                    className="precipitate-drop"
-                    style={{ animationDelay: `${p.delay}s` }}
-                    opacity="0.6"
+                    className="precipitate-drop drop-glow"
+                    style={{ animationDelay: `${p.delay}s`, animationDuration: `${p.dur}s` }}
+                    opacity="0.7"
                   />
                 ))}
 
@@ -507,9 +534,13 @@ export default function WaterCycle() {
         </div>
 
         {/* Information Panel */}
-        <div
+        <motion.div
           className="rounded-2xl p-8 mb-8 shadow-[0_20px_45px_rgba(15,23,42,0.15)] border border-white/30 dark:border-slate-800/60 border-l-4 bg-linear-to-br from-white/90 via-slate-50/80 to-blue-50/60 dark:from-slate-900/80 dark:via-slate-900/70 dark:to-slate-900/60 backdrop-blur-2xl"
           style={{ borderLeftColor: steps[currentStep].color }}
+          key={currentStep}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
         >
           <div className="flex items-center gap-4 mb-4">
             <div
@@ -530,20 +561,22 @@ export default function WaterCycle() {
           <p className="text-slate-700 dark:text-slate-200 text-base leading-relaxed">
             {steps[currentStep].text}
           </p>
-        </div>
+        </motion.div>
 
         {/* Controls */}
         <div className="flex flex-wrap gap-3 mb-8 justify-center">
-          <button
+          <motion.button
             onClick={handlePrevious}
             disabled={currentStep === 0}
             className="control-button px-6 py-2.5 bg-white/80 dark:bg-slate-900/70 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 shadow-sm disabled:shadow-none"
             aria-label="Paso anterior"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             ← Anterior
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={() => setIsPlaying(!isPlaying)}
             className={`control-button px-7 py-2.5 rounded-lg font-medium text-white shadow-sm transition focus-visible:outline-2 focus-visible:outline-offset-2 ${
               isPlaying
@@ -551,26 +584,32 @@ export default function WaterCycle() {
                 : "bg-linear-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500"
             }`}
             aria-label={isPlaying ? "Pausar animación" : "Reproducir animación"}
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
           >
             {isPlaying ? "⏸ Pausar" : "▶ Reproducir"}
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={handleNext}
             disabled={currentStep === steps.length - 1}
             className="control-button px-6 py-2.5 bg-white/80 dark:bg-slate-900/70 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg font-medium text-slate-700 dark:text-slate-200 border border-slate-200/60 dark:border-slate-700/60 shadow-sm disabled:shadow-none"
             aria-label="Siguiente paso"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Siguiente →
-          </button>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={handleReset}
             className="control-button px-6 py-2.5 bg-slate-700 hover:bg-slate-600 rounded-lg font-medium text-white shadow-sm"
             aria-label="Reiniciar animación"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             🔄 Reiniciar
-          </button>
+          </motion.button>
         </div>
 
         {/* Step Indicators */}
@@ -598,7 +637,7 @@ export default function WaterCycle() {
         {/* Progress indicator */}
         <div className="flex justify-center items-center gap-2">
           {steps.map((_, index) => (
-            <div
+            <motion.div
               key={index}
               className="rounded-full transition-all duration-300"
               style={{
@@ -607,6 +646,8 @@ export default function WaterCycle() {
                 backgroundColor: index === currentStep ? steps[currentStep].color : "rgba(148,163,184,0.6)",
               }}
               aria-label={`Paso ${index + 1}`}
+              animate={{ width: index === currentStep ? 20 : 6 }}
+              transition={{ duration: 0.3 }}
             />
           ))}
         </div>
